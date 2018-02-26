@@ -5,12 +5,13 @@ class Solution {
         while(i < nums.length){
             if(nums[i] < 1 || nums[i] > nums.length || nums[i] == i+1)
                 i++;
-            //相同则不需要换
+            //相同则不需要交换，不同的时候需要把nums[nums[i] - 1] 这个元素放到相应的i的位置 因为每个元素必须是nums[i] = i + 1
             else if(nums[nums[i]-1] != nums[i])
                 swap(nums, i, nums[i]-1);
             else i++;
         }
         i = 0;
+        //最后只需要扫描看看哪个位置的数字还是不对，就知道缺了哪个
         while(i < nums.length && nums[i] == i+1)
             i++;
         return i+1;
