@@ -1,0 +1,33 @@
+class Solution {
+    public void nextPermutation(int[] nums) {
+        //通过画图可以得知此题可以使用升序倒置法
+        //具体来说就是，从后往前搜索，指导遇到前nums[i] < nums[i+1] 等于的情况也是直接跳过， 具体可以举个例子分析
+        //当找到这个数时，把它和之前比他大的第一个数交换，然后最高位此时就还好了，之后由于交换的是比他大的第一个数，说明
+        //除去最高位意外此时序列为倒序，这样只要把剩下的序列倒置就得到下一个序列了
+        int index = nums.length - 2;
+        while(index >= 0 && nums[index] >= nums[index+1])
+            index--;
+        if(index >= 0){
+            int i = nums.length - 1;
+            //相同的还过去没意义如 151，所以是 <=
+            while(i > index && nums[i] <= nums[index])
+                i--;
+            swap(nums, i, index);
+        }
+        reverse(nums, index + 1, nums.length - 1);
+    }
+    
+    private void swap(int[] nums, int i, int j){
+        int tmp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = tmp;
+    }
+    
+    private void reverse(int nums[], int start, int end){
+        while(start < end){
+            int tmp = nums[start];
+            nums[start] = nums[end];
+            nums[end] = tmp;
+        }
+    }
+}
