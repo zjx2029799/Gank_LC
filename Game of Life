@@ -1,0 +1,102 @@
+class Solution {
+    /*
+    public void gameOfLife(int[][] board) {
+        //primitive idea, copy a matrix to hold its status
+        int m = board.length;
+        int n = board[0].length;
+        int[][] copy = new int[m][n];
+        
+        for(int i=0; i<m; i++){
+            for(int j=0; j<n; j++){
+                int lives = 0;
+                
+                if(i > 0)
+                {
+                    lives += board[i-1][j];
+                }
+                if(i < m-1)
+                    lives += board[i+1][j];
+                
+                if(j > 0)
+                {
+                    lives += board[i][j-1];            
+                }
+                if(j < n-1)
+                {
+                    lives += board[i][j+1];
+                  
+                }
+                if(i > 0 && j > 0)
+                    lives += board[i-1][j-1];
+                
+                if(i > 0 && j < n-1)
+                    lives += board[i-1][j+1];
+                
+                if(i < m-1 && j > 0)
+                    lives += board[i+1][j-1];
+                
+                if(i < m-1 && j < n-1)
+                    lives += board[i+1][j+1];
+                
+                 System.out.print(lives + "\t");
+                
+                if(board[i][j] == 0 && lives == 3){
+                    copy[i][j] = 1;
+                    continue;
+                }     
+                if(board[i][j] == 1 && lives < 2){
+                    copy[i][j] = 0;
+                    continue;
+                }       
+                if(board[i][j] == 1 && (lives == 2 || lives == 3)){
+                    copy[i][j] = 1;
+                    continue;
+                }                    
+                if(board[i][j] == 1 && lives > 3){
+                     copy[i][j] = 0;
+                    continue;
+                }
+                   
+            }
+            System.out.println();
+        }
+        //在leetcode里不可以直接 board = copy， 这样board的实际值还是没有改变，原因未知....
+        //可以通过直接改board来实现
+        for(int i=0; i<m; i++){
+            for(int j=0; j<n; j++)
+                board[i][j] = copy[i][j];
+        }
+    }
+    */
+    
+    public void gameOfLife(int[][] board) {
+        //编码发 ： https://segmentfault.com/a/1190000003819277, 同时简化判断句
+        int m = board.length;
+        int n = board[0].length;
+        // 0（0，0）: 代表原来死的现在还是死的
+        // 1（1，1）: 原来活的现在还是活的
+        // 2（1，0）: 原来获得现在死了
+        // 3（0，1）: 原来死的现在活的    这样最后模2取余后0就是死的，1就是活的
+        for(int i=0; i<m; i++){
+            for(int j=0; j<n; j++){
+                int lives = 0;
+                
+                for(int y=Math.max(0, i-1); y<=Math.min(i+1, m-1); y++){
+                    for(int x=Math.max(0, j-1); x<=Math.min(j+1, n-1); x++)
+                        lives += board[y][x] & 1;
+                }
+                
+                //自己是1旁边有两个：lives = 3， 自己是1旁边有三个 lives-自己=3
+                //自己死的周围三个活的 lives = 3
+                if(lives == 3 || lives - board[i][j] == 3)
+                    board[i][j] |= 2;
+            }
+        }
+        
+        for(int i=0; i<m; i++){
+            for(int j=0; j<n; j++)
+                board[i][j] >>>= 1;
+        }
+    }
+
+}
