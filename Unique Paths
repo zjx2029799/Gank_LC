@@ -1,0 +1,23 @@
+class Solution {
+    
+    public int uniquePaths(int m, int n) {
+        // DP problem: T(i,j) = T(i-1,j) + T(i,j-1)
+        // before the bottom it will be either down or right
+        return computeNumberOfWaysToXY(m-1, n-1, new int[m][n]);
+    }
+    public int computeNumberOfWaysToXY(int x, int y, int[][] numberOfWays){
+        // base condition when x=0 or y=0, there is always 1 way to go down or right
+        if(x == 0 || y == 0){
+            return 1;
+        }
+        
+        //numberOfways indicate weather the entry has been calculated.
+        if(numberOfWays[x][y] == 0){
+            int waysTop = x == 0? 0: computeNumberOfWaysToXY(x-1, y, numberOfWays);
+            int waysLeft = y == 0? 0: computeNumberOfWaysToXY(x, y-1, numberOfWays);
+            numberOfWays[x][y] = waysTop + waysLeft;
+        }
+        
+        return numberOfWays[x][y];
+    }
+}
