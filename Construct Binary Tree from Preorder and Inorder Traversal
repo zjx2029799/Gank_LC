@@ -9,19 +9,27 @@
  */
 class Solution {
     public TreeNode buildTree(int[] preorder, int[] inorder) {
-        return generate(0,0,inorder.length-1,preorder,inorder);
+        //primitive idea, think about the order of the two traverse tree
+        //then we find that when we use the preorder index as the root, and find the cur root in inorder
+        // we can know the left subtree and right subtree, we just need to make sure the related index
+        return generate(0, 0, inorder.length - 1, preorder, inorder);   
     }
     
-    private static TreeNode generate(int preIndex, int inIndex, int inEnd, int[] preorder, int[] inorder){
-        if(preIndex > preorder.length-1 || inIndex > inEnd)
-            return null;
-        TreeNode root = new TreeNode(preorder[preIndex]);
+    private TreeNode generate(int i, int j, int end, int[] preorder, int[] inorder){
+        // i: preorder index used to point to cur root
+        //j: 当前root左子树的index起点, used to find the cur root from left subtree and right subtree
+        // end: is the range to make sure the boundary of the subtrees
+        if(i > preorder.length - 1|| j > end) return null;
+        TreeNode root = new TreeNode(preorder[i]);
         int index = 0;
-        for(int i=inIndex; i<=inEnd; i++){
-            if(inorder[i] == root.val) index = i;
+        for(int k=j; k<inorder.length; k++){
+            if(inorder[k] == root.val)
+                index = k;
         }
-        root.left = generate(preIndex+1, inIndex, index-1, preorder, inorder);
-        root.right = generate(preIndex + index - inIndex +1, index+1, inEnd, preorder, inorder);
+        // cur root + 1 to find 当前根节点， j is the start of the left subtree
+        root.left = generate(i+1, j, index-1, preorder, inorder);
+        //右子树， root 节点index为当前root index 跳过当前root左子树全部节点在
+        root.right = generate(i + index - j + 1, index+1, end, preorder, inorder);
         return root;
     }
 }
