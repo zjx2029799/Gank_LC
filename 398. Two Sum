@@ -1,0 +1,33 @@
+public class Solution {
+    /*
+    public int[] twoSum(int[] nums, int target) {
+        //primitive: 两个loop，分别定位到两个数，把所有组合都写出来
+        int[] res = new int[2];
+        for(int i=0; i<nums.length-1; i++){
+            for(int j=i+1; j<nums.length; j++){
+                if(nums[i] + nums[j] == target){
+                    res[0] = i;
+                    res[1] = j;
+                }
+            }
+        }
+        return res;
+    }
+    */
+    /*
+    public int[] twoSum(int[] nums, int target) {
+      // 因为要找到对应加数并且保留索引，所以想到用hashmap,这样只需要n的复杂度
+        int[] res = new int[2];
+        Map<Integer, Integer> map = new HashMap<>();
+        for(int i=0; i<nums.length; i++){
+            if(map.containsKey(nums[i])){
+                res[0] = map.get(nums[i]);
+                res[1] = i;
+            }else
+                map.put(target - nums[i], i);
+        }
+        return res;
+    }
+    */
+
+}
