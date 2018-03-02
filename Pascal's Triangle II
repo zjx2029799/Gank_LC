@@ -1,0 +1,16 @@
+class Solution {
+    public List<Integer> getRow(int rowIndex) {
+        //经分析就是写出I中的一行,这就体现出不适应上一行作为参照的好处
+       //list.add(0,1) 每次往数组最前面加一个1， 则后面的数组自动往后移动
+        //当数组长度大于2时 每个数字除去第一个和最后一个 其他的都是后一个加前一个
+        List<Integer> res = new ArrayList<>();
+        for(int i=0; i<=rowIndex; i++){
+            res.add(0, 1);
+            for(int j=1; j<res.size()-1; j++){
+                //j=1 跳过第一个1， j<res.size()-1 跳过最后一个0
+                res.set(j, res.get(j) + res.get(j+1));
+            }
+        }
+        return res;
+    }
+}
