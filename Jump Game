@@ -1,0 +1,15 @@
+class Solution {
+    public boolean canJump(int[] nums) {
+       //直观来看，就是从后往前推，看前一个能不能到达后一个，如果不行指针前移，如果可以换新的位置，直到开头
+        int cur = nums.length - 1;
+        int pre = nums.length - 2;
+        if(nums.length < 2) return true;
+        while(pre >= 0){
+            if(nums[pre] >= cur - pre){
+                cur = pre;
+            }
+            pre--;
+        }
+        return cur == 0;
+    }
+}
