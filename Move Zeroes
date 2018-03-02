@@ -1,0 +1,14 @@
+public class Solution {
+    public void moveZeroes(int[] nums) {
+        //想到要保持原有数组顺序，所以直接在原数组上修改，可以用two pointer
+        //每遇到一个0就和后面第一个不是0的交换，但这样操作数还是不够简单
+        //所以想到直接覆盖原有数组
+        int index = 0;
+        for(int i=0; i<nums.length; i++){
+            if(nums[i] != 0)
+                nums[index++] = nums[i];
+        }
+        for(int i=index; i<nums.length; i++)
+            nums[i] = 0;
+    }
+}
