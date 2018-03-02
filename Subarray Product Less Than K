@@ -1,0 +1,36 @@
+class Solution {
+     public int numSubarrayProductLessThanK(int[] nums, int k) {
+         //one pass two pointers类似于滑动窗口， 滑动窗口的大小就是穿就包含最右点数字的集合个数
+         //如[5, 2, 6], 当滑动到6时，滑动窗口大小为三，包含6在内的小于k的集合个数也是3
+         int prod = 1;
+         int res = 0;
+         int left = 0;
+         if(k < 2) return 0; // 如果k=0会出现越界
+         for(int i=0; i<nums.length; i++){
+             prod = prod * nums[i];
+             while(prod >= k) prod /= nums[left++];
+             res += i - left + 1;
+         }
+         return res;
+     }
+    
+    /*
+    public int numSubarrayProductLessThanK(int[] nums, int k) {
+        //首先不用考虑越界问题，因为范围限制了
+        //连续数组的乘积问题，由于都是positive，所以先想到暴力解，O(n^2) 超时
+        int count = 0;
+        for(int i=0; i<nums.length; i++){
+            int product = nums[i];
+            for(int j=i; j<nums.length; j++){
+                if(j == i && product < k) count++;
+                else if(product * nums[j] < k){
+                    count ++;
+                    product = product * nums[j];
+                }else
+                    break;
+            }
+        }
+        return count;
+    }
+    */
+}
