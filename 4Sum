@@ -1,0 +1,52 @@
+class Solution {
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+       //依然根据3sum想到双指针法，只不过这次要多加一重循环
+        List<List<Integer>> res = new ArrayList<>();
+        Arrays.sort(nums);
+        for(int i=0; i<nums.length - 3; i++){
+            if(i > 0 && nums[i-1] == nums[i]) continue;
+            List<List<Integer>> tmp = threeSum(nums, i, target - nums[i]);
+            res.addAll(tmp);
+        }
+        return res;
+    }
+    
+    private List<List<Integer>> threeSum(int[] nums, int i, int target){
+        List<List<Integer>> res = new ArrayList<>();
+        for(int j = i+1; j<nums.length - 2; j++){
+            if(j > i+1 && nums[j] == nums[j-1]) continue;
+            List<List<Integer>> tmp = twoSum(nums, i, j, target - nums[j]);
+            res.addAll(tmp);
+        }
+        return res;
+    }
+    
+    private List<List<Integer>> twoSum(int[] nums, int i, int j, int target){
+        List<List<Integer>> res = new ArrayList<>();
+        int left = j + 1;
+        int right = nums.length - 1;
+        while(left < right){
+            List<Integer> tmp = new ArrayList<>();
+            if(nums[left] + nums[right] == target){
+                tmp.add(nums[i]);
+                tmp.add(nums[j]);
+                tmp.add(nums[left]);
+                tmp.add(nums[right]);
+                res.add(tmp);
+                
+                do{
+                    left++;
+                }while(left < nums.length && nums[left] == nums[left-1]);
+                
+                do{
+                    right--;
+                }while(right >= 0 && nums[right] == nums[right + 1]);
+                
+            }else if(nums[left] + nums[right] < target)
+                left++;
+            else
+                right--;
+        }
+        return res;
+    }
+}
