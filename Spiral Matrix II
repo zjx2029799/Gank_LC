@@ -1,0 +1,32 @@
+class Solution {
+    public int[][] generateMatrix(int n) {
+        //generate it layer by layer
+        int[][] res = new int[n][n];
+        int row1 = 0;
+        int row2 = n-1;
+        int col1 = 0;
+        int col2 = n-1;
+        int value = 1;
+        while(row1 <= row2 && col1 <= col2){
+            for(int i=col1; i<=col2; i++){
+                res[row1][i] = value++;
+            }
+            for(int i=row1+1; i<=row2; i++){
+                res[i][col2] = value++;
+            }
+            
+            if(row1 < row2 && col1 < col2){
+                for(int i=col2-1; i>=col1; i--)
+                    res[row2][i] = value++;
+                for(int i=row2-1; i>row1; i--)
+                    res[i][col1] = value++;
+            }
+            
+            row1++;
+            row2--;
+            col1++;
+            col2--;
+        }
+        return res;
+    }
+}
