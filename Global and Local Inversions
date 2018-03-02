@@ -1,0 +1,14 @@
+class Solution {
+    public boolean isIdealPermutation(int[] A) {
+       //这道题上来想到local inversion 同时也是global inversion
+        //所以如果数组里全是local inversion 则两个数量相同，一旦出现一个不是local的global就是false
+        int max = A[0];
+        for(int i=1; i<A.length-1; i++){
+            if(A[i+1] < max)
+                return false;
+            if(A[i] > max)
+                max = A[i];
+        }
+        return true;
+    }
+}
