@@ -1,0 +1,26 @@
+class Solution {
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        List<List<Integer>> res = new ArrayList<>();
+        List<Integer> cur = new ArrayList<>();
+        //一遇到duplcuate的问题，就需要排序来简单的去重
+        Arrays.sort(candidates);
+        backtrack(res, cur, candidates, target, 0);
+        return res;
+    }
+    
+    private static void backtrack(List<List<Integer>> res, List<Integer> cur, int[] cands, int remain, int index){
+        if(remain == 0){
+            res.add(new ArrayList<>(cur));
+            return;
+        }
+        if(remain < 0) return;
+        for(int i=index; i<cands.length; i++){
+            //除去duplicate
+            if(i > index && cands[i] == cands[i-1])
+                continue;
+            cur.add(cands[i]);
+            backtrack(res, cur, cands, remain - cands[i], i+1);
+            cur.remove(cur.size()-1);
+        }
+    }
+}
