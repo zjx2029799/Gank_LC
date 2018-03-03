@@ -1,0 +1,28 @@
+class Solution {
+    public int leastInterval(char[] tasks, int n) {
+        //把26个字母计数
+        int[] chs = new int[26];
+        for(char c: tasks){
+            chs[c - 'A']++;
+        }
+        //对字母表计数器进行排序，得到数量最多的task拍到最后
+        Arrays.sort(chs);
+        int intervals = 0;
+        while(chs[25] > 0){
+            //当最后一个都为0的时候结束
+            int i = 0;
+            while(i <= n){
+                //在cool time时间内如果全部任务执行完了则退出当前循环
+                if(chs[25] == 0) break;
+                //只有在26个之内的cool time才会减损已有的task， 已有的task必须还有值
+                if(i < 26 && chs[25 - i] > 0)
+                    chs[25 - i]--;
+                //如果不满足上面则单纯的cool 执行 idle
+                i++;
+                intervals++;
+            }
+            Arrays.sort(chs);
+        }
+        return intervals;
+    }
+}
