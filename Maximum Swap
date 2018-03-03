@@ -1,0 +1,49 @@
+class Solution {
+
+ public int maximumSwap(int num) {
+        //木桶法 O(n)
+       char[] chs = Integer.toString(num).toCharArray();
+        //set a bucket[10]存每个数字对应的最低位， 从头开始遍历，记录当前数字的位置
+        int bucket[] = new int[10];
+        for(int i=0; i<chs.length; i++){
+            bucket[chs[i] - '0'] = i;
+        }
+        
+        //从高位，也就是从头开始遍历，再从最大的桶开始遍历，如果最大的桶有值且比当前位置的数大
+        //说明要交换当前位置数和当前最大的桶的数
+        for(int i=0; i<chs.length; i++){
+            for(int j=9; j>chs[i] - '0'; j--){
+                if(bucket[j] > i){//需要这个位置在当前i的后面才会发生置换
+                    char tmp = chs[bucket[j]];
+                    chs[bucket[j]] = chs[i];
+                    chs[i] = tmp;
+                    return Integer.valueOf(new String(chs));
+                }
+            }
+        }
+        return num;
+    }
+
+
+    public int maximumSwap(int num) {
+       char[] arr = Integer.toString(num).toCharArray();
+        int max = Integer.MIN_VALUE;
+        for(int i=0; i<arr.length;i++){
+            for(int j=i; j<arr.length;j++){
+                swap(arr, i,j);
+                if(max < Integer.parseInt(new String(arr))){
+                     max = Integer.parseInt(new String(arr));
+                }
+                swap(arr,i,j);
+            }
+        }
+        return max;
+    }
+    private void swap(char[] arr, int a, int b){
+        if(arr[a] != arr[b]){
+             char tmp = arr[a];
+            arr[a] = arr[b];
+            arr[b] = tmp;
+        }
+    }
+}
