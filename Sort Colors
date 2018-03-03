@@ -1,0 +1,26 @@
+public class Solution {
+    public void sortColors(int[] nums) {
+       //put the same number together, one pass, two pointers
+        //看到0就放到前面，看到2就放到后面，最后剩下的都是1
+        int left = 0;
+        int right = nums.length - 1;
+        int cur = 0;
+        while(cur <= right){
+            if(nums[cur] == 0){
+                //第一次cur++因为cur前面的都换好了
+                swap(nums, cur++, left++);
+            }else if(nums[cur] == 2)
+                //这里cur不在++因为从后面换来的可能是0 或者 1 或者 仍然是2， 所以还要继续处理这个位置的数
+                swap(nums, cur, right--);
+            else
+                cur++;
+        }
+    }
+    private void swap(int[] nums, int i, int j){
+        int tmp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = tmp;
+    }
+
+}
+
