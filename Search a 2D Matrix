@@ -1,0 +1,45 @@
+public class Solution {
+  public boolean searchMatrix(int[][] matrix, int target) {
+        //这道题一看有序数组查找，自然想到binary
+        //观察可知，这个数组如果拉直了就是一个简单的sorted一维数组，自然可以binary
+        //如果再建一个转换的一维数组，复杂度已然达到n^2没有意义在binary了
+        if(matrix==null||matrix.length==0) return false;
+        if(matrix[0]==null||matrix[0].length==0) return false;
+        int m = matrix.length;
+        int n = matrix[0].length;
+        int start = 0;
+        int end = m*n - 1;
+        while(start < end - 1){
+            int mid = start + (end - start) / 2;
+            int row = mid / n;
+            int col = mid % n;
+            if(matrix[row][col] == target) return true;
+            else if(matrix[row][col] < target)
+                start = mid;
+            else
+                end = mid;
+        }
+        if(matrix[start/n][start%n] == target ||
+          matrix[end/n][end%n] == target) return true;
+        else
+            return false;
+    }
+
+//两种边界方法
+
+    public boolean searchMatrix(int[][] matrix, int target) {
+        if(matrix==null||matrix.length==0) return false;
+        if(matrix[0]==null||matrix[0].length==0) return false;
+        int m = matrix.length;
+        int n = matrix[0].length;
+        int start = 0;
+        int end = m*n -1;
+        while(start<=end){
+            int mid = start + (end-start)/2;
+            if(target==matrix[mid/n][mid%n]) return true;
+            else if(target>matrix[mid/n][mid%n]) start = mid + 1;
+            else end = mid - 1;
+        }
+        return false; 
+    }
+} 
