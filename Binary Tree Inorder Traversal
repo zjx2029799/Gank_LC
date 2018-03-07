@@ -1,0 +1,78 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    
+    //here we will introduce a very powerful way to deal with the three typical binary traverse problem
+    public List<Integer> inorderTraversal(TreeNode root){
+        Deque<Guide> stack = new LinkedList<>();
+        stack.addFirst(new Guide(0, root));
+        List<Integer> res = new ArrayList<>();
+        while(!stack.isEmpty()){
+            Guide cur = stack.removeFirst();
+            if(cur.node == null) continue;
+            if(cur.oper == 1){
+                res.add(cur.node.val);
+            }else{
+                stack.addFirst(new Guide(0,cur.node.right));
+                stack.addFirst(new Guide(1, cur.node));
+                stack.addFirst(new Guide(0, cur.node.left));
+            }
+        }
+        return res;
+    }
+    
+    private class Guide{
+        int oper; // 0: visit, 1: print
+        TreeNode node;
+        Guide(int oper, TreeNode node){
+            this.oper = oper;
+            this.node = node;
+        }
+    }
+    
+    
+    
+    public List<Integer> inorderTraversal(TreeNode root){
+       //recursion: 因为它考虑起来最直观
+        List<Integer> res = new ArrayList<>();
+        helper(res, root);
+        return res;
+    }
+    
+    private void helper(List<Integer> res, TreeNode root){
+        if(root == null)
+            return;
+        helper(res, root.left);
+        res.add(root.val);
+        helper(res, root.right);
+    }
+    
+    
+    /*
+    public List<Integer> inorderTraversal(TreeNode root) {
+        //travserse
+       Stack<TreeNode> stack = new Stack<TreeNode>();
+        ArrayList<Integer> res = new ArrayList<>();
+        TreeNode cur = root;
+        while(cur != null || !stack.isEmpty()){
+            while(cur != null){
+                stack.push(cur);
+                cur = cur.left;
+            }
+            cur = stack.pop();
+            res.add(cur.val);
+            cur = cur.right;
+        }
+        return res;
+    }
+    
+    */
+    
+}
