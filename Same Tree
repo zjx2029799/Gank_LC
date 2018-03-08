@@ -1,0 +1,39 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+
+ public boolean isSameTree(TreeNode p, TreeNode q) {
+        //recursion
+        if(p == null && q == null) return true;
+        if(p == null || q == null) return false;
+        if(p.val == q.val)
+            return isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
+        return false;
+    }
+
+    public boolean isSameTree(TreeNode p, TreeNode q) {
+        Stack<TreeNode> pst = new Stack<>();
+        Stack<TreeNode> qst = new Stack<>();
+        if(p != null) pst.push(p);
+        if(q != null) qst.push(q);
+        while(!pst.isEmpty() && !qst.isEmpty()){
+            TreeNode p1 = pst.pop();
+            TreeNode q1 = qst.pop();
+            if(p1.val != q1.val) return false;
+            if(p1.left != null) pst.push(p1.left);
+            if(q1.left != null) qst.push(q1.left);
+            if(pst.size() != qst.size()) return false;
+            if(p1.right != null) pst.push(p1.right);
+            if(q1.right != null) qst.push(q1.right);
+            if(pst.size() != qst.size()) return false;
+        }
+        return pst.size() == qst.size();
+    }
+}
