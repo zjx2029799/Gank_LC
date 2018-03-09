@@ -1,0 +1,33 @@
+class Solution {
+    public String[] findWords(String[] words) {
+        //first idea is to use three HashSet / ArrayList to check each word;
+        String[] dict = {"qwertyuiop","asdfghjkl","zxcvbnm"};
+        Map<Character, Integer> map = new HashMap<>();
+        for(int i=0; i<dict.length; i++){
+            for(char ch: dict[i].toCharArray()){
+                map.put(ch, i+1); // 每个字符，对应其行号
+            }
+        }
+        
+        List<String> res = new ArrayList<>();
+        
+        for(int i=0; i<words.length; i++){
+            //如果遇到空字符串，跳过不处理
+            if(words[i] == "") continue;
+            //初始值设为0
+            int rows = 0;
+            for(char ch: words[i].toLowerCase().toCharArray()){
+                //第一次赋值行号，之后若出现行号不一致的，直接赋值-1表面不符合要求，跳出循环
+                if(rows == 0)
+                    rows = map.get(ch);
+                else if(rows != map.get(ch)){
+                    rows = -1;
+                    break;
+                }
+            }
+            if(rows != -1) res.add(words[i]);
+        }
+        
+        return res.toArray(new String[0]);
+    }
+}
