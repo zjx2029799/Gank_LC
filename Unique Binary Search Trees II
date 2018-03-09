@@ -1,0 +1,42 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public List<TreeNode> generateTrees(int n) {
+        //思路和I中一样，这次要递归调用得出所有的可能结果
+        //所有可能结果就是以1到n任意一个为跟节点，左边子树可能的组合和右边子树可能的组合的乘积
+        //左子树只可能是当前根节点的左半部分(min, i-1), 右子树是（i+1, max）.
+        //得到数量后依次输出left + right + root本身
+        if(n == 0) return new ArrayList<>();
+        return helper(1, n);
+    }
+    
+    private List<TreeNode> helper(int min, int max){
+        List<TreeNode> res = new ArrayList<>();
+        //这里很关键，当min > max时说明此时左子树为空或者右子树为空，比如刚开始的时候情况，左边就是直接空的
+        if(min > max){
+            res.add(null);
+            return res;
+        }
+        
+        for(int i=min; i<=max; i++){
+            List<TreeNode> left = helper(min, i-1);
+            List<TreeNode> right = helper(i+1, max);
+            for(int j=0; j<left.size(); j++){
+                for(int k=0; k<right.size(); k++){
+                    TreeNode root = new TreeNode(i);
+                    root.left = left.get(j);
+                    root.right = right.get(k);
+                    res.add(root);
+                }
+            }
+        }
+        return res;
+    }
+}
