@@ -1,0 +1,24 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    // make use of the maxDepth 
+    public boolean isBalanced(TreeNode root) {
+        return maxDepth(root) != -1;
+    } 
+    
+    private int maxDepth(TreeNode root){
+        if(root == null) return 0;
+        int left = maxDepth(root.left);
+        int right = maxDepth(root.right);
+        //算非balance的时候不仅要看这一层，还要看下一层新算出来的
+        if(left == -1 || right == -1 || Math.abs(right - left) > 1) return -1;
+        return Math.max(left, right) + 1;
+    }
+}
