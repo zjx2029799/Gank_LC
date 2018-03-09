@@ -1,0 +1,23 @@
+class Solution {
+    public int[][] matrixReshape(int[][] nums, int r, int c) {
+        //想到是先把数组拉直，然后再安装新的维度装回去
+        int m = nums.length;
+        int n = nums[0].length;
+        if(r*c != m*n) return nums;
+        int[] oneD = new int[m*n];
+        int index = 0;
+        for(int i=0; i<m; i++){
+            for(int j=0; j<n; j++){
+                oneD[index++] = nums[i][j];
+            }
+        }
+        
+        int[][] res = new int[r][c];
+        for(int i=0; i<r; i++){
+            for(int j=0; j<c; j++){
+                res[i][j] = oneD[i*c + j];
+            }
+        }
+        return res;
+    }
+}
