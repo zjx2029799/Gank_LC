@@ -9,7 +9,46 @@
  */
 public class Solution {
     public boolean isSymmetric(TreeNode root) {
-        //iteration
+        //iteration, 想到iteration的话就是安装顺序的思维，从root节点的左右孩子开始，一路往下
+        //用stack保存过程
+        if(root == null) return true;
+        TreeNode left = root.left;
+        TreeNode right = root.right;
+        Deque<TreeNode> stack = new ArrayDeque<>();
+        if(left != null){
+            if(right != null){
+                stack.addFirst(left);
+                stack.addFirst(right);
+            }else
+                return false;
+        }else if(right != null)
+            return false;
+        else
+            return true;
+        
+        while(!stack.isEmpty()){
+            TreeNode l = stack.removeFirst();
+            TreeNode r = stack.removeFirst();
+            if(l.val != r.val) return false;
+            
+            if(l.left != null){
+                if(r.right == null) return false;
+                stack.addFirst(l.left);
+                stack.addFirst(r.right); 
+            }else if(r.right != null)
+                return false;
+            
+            
+            if(l.right != null){
+                if(r.left == null) return false;
+                stack.addFirst(l.right);
+                stack.addFirst(r.left);
+               
+            }else if(r.left != null)
+                return false;
+            
+        }
+        return true;
         
     }
     
