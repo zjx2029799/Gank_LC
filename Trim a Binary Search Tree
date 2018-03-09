@@ -1,0 +1,22 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public TreeNode trimBST(TreeNode root, int L, int R) {
+        //recursion 如果root.val>R 说明trim root在左子树
+        //如果root.val < L 说明trim root 在右子树
+        if(root == null) return null;
+        if(root.val > R) return trimBST(root.left, L, R);
+        if(root.val < L) return trimBST(root.right, L, R);
+        
+        root.left = trimBST(root.left, L, R);
+        root.right = trimBST(root.right, L, R);
+        return root;
+    }
+}
