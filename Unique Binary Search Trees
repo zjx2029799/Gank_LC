@@ -1,0 +1,24 @@
+class Solution {
+    public int numTrees(int n) {
+        /*卡塔兰数，可以解有效括号的问题, 复杂度：（1+2+3+....n）= n^2
+        典型的动态规划问题
+        The case for 3 elements example
+        Count[3] = Count[0]*Count[2]  (1 as root)
+                      + Count[1]*Count[1]  (2 as root)
+                      + Count[2]*Count[0]  (3 as root)
+
+        Therefore, we can get the equation:
+        Count[i] = ∑ Count[0...k] * [ k+1....i]     0<=k<i-1  
+
+*/      
+        int[] res = new int[n + 1];
+        res[0] = 1;
+        res[1] = 1;
+        for(int i=2; i<=n; i++){
+            for(int j=0; j<i; j++){
+                res[i] += res[j] * res[i-j-1]; 
+            }
+        }
+        return res[n];
+    }
+}
