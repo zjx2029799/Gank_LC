@@ -1,0 +1,26 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public TreeNode sortedArrayToBST(int[] nums) {
+        //既然要balance，所以要尽量从中间开始build，每次都选中间的作为根节点，左右子树选择方法一样
+        //递归就好
+        if(nums == null || nums.length == 0) return null;
+        return buildTree(nums,0, nums.length-1);
+    }
+    
+    private TreeNode buildTree(int[] nums, int start, int end){
+       if(start > end)
+           return null;
+        TreeNode node = new TreeNode(nums[start + (end-start)/2]);
+        node.left = buildTree(nums, start, (start + (end-start)/2) - 1);
+        node.right = buildTree(nums, (start + (end-start)/2) + 1, end);
+        return node;
+    }
+}
