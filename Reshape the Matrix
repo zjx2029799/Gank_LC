@@ -1,6 +1,26 @@
 class Solution {
+    
     public int[][] matrixReshape(int[][] nums, int r, int c) {
-        //想到是先把数组拉直，然后再安装新的维度装回去
+        //witout extra space
+        int m = nums.length;
+        int n = nums[0].length;
+        if(r*c != m*n) return nums;
+        int[][] res = new int[r][c];
+        int count = 0;
+        for(int i=0; i<m; i++){
+            for(int j=0; j<n; j++){
+                res[count / c][count % c] = nums[i][j];
+                count++;
+            }
+            
+        }
+        return res;
+    }
+    
+
+    /*
+    public int[][] matrixReshape(int[][] nums, int r, int c) {
+        //想到是先把数组拉直，然后再安装新的维度装回去,有extra space
         int m = nums.length;
         int n = nums[0].length;
         if(r*c != m*n) return nums;
@@ -20,4 +40,5 @@ class Solution {
         }
         return res;
     }
+    */
 }
