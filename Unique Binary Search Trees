@@ -2,13 +2,19 @@ class Solution {
     public int numTrees(int n) {
         /*卡塔兰数，可以解有效括号的问题, 复杂度：（1+2+3+....n）= n^2
         典型的动态规划问题
-        The case for 3 elements example
-        Count[3] = Count[0]*Count[2]  (1 as root)
-                      + Count[1]*Count[1]  (2 as root)
-                      + Count[2]*Count[0]  (3 as root)
+        定义f(n)为unique BST的数量，以n = 3为例：
 
-        Therefore, we can get the equation:
-        Count[i] = ∑ Count[0...k] * [ k+1....i]     0<=k<i-1  
+        构造的BST的根节点可以取{1, 2, 3}中的任一数字。
+
+        如以1为节点，则left subtree只能有0个节点，而right subtree有2, 3两个节点。所以left/right subtree一共的combination         数量为：f(0) * f(2) = 2
+
+        以2为节点，则left subtree只能为1，right subtree只能为2：f(1) * f(1) = 1
+
+        以3为节点，则left subtree有1, 2两个节点，right subtree有0个节点：f(2)*f(0) = 2
+
+        总结规律：
+        f(0) = 1
+        f(n) = f(0)*f(n-1) + f(1)*f(n-2) + ... + f(n-2)*f(1) + f(n-1)*f(0)
 
 */      
         int[] res = new int[n + 1];
