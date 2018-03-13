@@ -1,0 +1,33 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    //set an static value;
+    //因为int型的不是一个object的地址，而是一个不可变的变量，所以要给她一个static的scope
+    private int max = Integer.MIN_VALUE;
+    public int maxPathSum(TreeNode root) {
+    //想要得到最大的path和，则首先考虑这个和怎么生成
+        //对于每一颗子树，和都是左side最大的+node本身+右边最大的，因此想到用递归
+        //dfs
+        dfs(root);
+        return max;
+    }
+    private int dfs(TreeNode root){
+        //key point is maintain a globle max and each time during the recursion stack
+        // update the max and return one big sides of the tree path
+        // finally the max will always maintain the current path based on that node as the root.
+        if(root == null)
+            return 0;
+            //要考虑小于0的情况，如果是小于0，则不需要加上这一边的
+        int left = Math.max(dfs(root.left), 0);
+        int right = Math.max(dfs(root.right), 0);
+        max = Math.max((left + right + root.val), max);
+        return Math.max(left, right) + root.val;
+    }
+}
