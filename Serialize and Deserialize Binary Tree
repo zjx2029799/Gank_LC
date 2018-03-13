@@ -8,46 +8,53 @@
  * }
  */
 public class Codec {
-
-    private static final String nu = "null";
-    private static final String spliter = ",";
+    //我们需要有"null" 和 ","两个字符，因为这两个是不需要变化的，所以直接给他们final
+    private static final String nul = "null";
+    private static final String coma = ",";
+    
     // Encodes a tree to a single string.
     //build string as pre-order 
     public String serialize(TreeNode root) {
-       StringBuilder sb = new StringBuilder();
-        buildString(root, sb);
+       //直接就是先序遍历一个树
+        //这里需要做字符串拼接，所以用一个StringBuilder
+        StringBuilder sb = new StringBuilder();
+        helper(root, sb);
         return sb.toString();
     }
     
-    private void buildString(TreeNode root, StringBuilder sb){
-        if(root == null)
-            sb.append(nu).append(spliter);
-        else{
-            sb.append(root.val).append(spliter);
-            buildString(root.left, sb);
-            buildString(root.right, sb);
+    private void helper(TreeNode root, StringBuilder sb){
+        if(root == null){
+            sb.append(nul).append(coma);
+            return;
         }
+        
+        sb.append(root.val).append(coma);
+        helper(root.left, sb);
+        helper(root.right, sb);
     }
+    
    
 
     // Decodes your encoded data to tree.
     //give the tree pre-order
     public TreeNode deserialize(String data) {
-        Queue<String> q = new LinkedList<>();
-        q.addAll(Arrays.asList(data.split(spliter)));
+       String[] strs = data.split(",");
+       Deque<String> q = new ArrayDeque<>();
+        q.addAll(Arrays.asList(strs));
         return buildTree(q);
     }
     
-    private TreeNode buildTree(Queue<String> q){
-       String node = q.poll();
-        if(node.equals(nu)) return null;
+    private TreeNode buildTree(Deque<String> q){
+        String cur = q.removeFirst();
+        //要用equals而不是 ==， 因为这个是实际的值
+        if(cur.equals(nul))
+            return null;
         else{
-            TreeNode root = new TreeNode(Integer.valueOf(node));
+            TreeNode root = new TreeNode(Integer.valueOf(cur));
             root.left = buildTree(q);
             root.right = buildTree(q);
             return root;
         }
-       
     }
     
    
