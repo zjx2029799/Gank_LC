@@ -1,0 +1,48 @@
+/**
+ * Definition for binary tree with next pointer.
+ * public class TreeLinkNode {
+ *     int val;
+ *     TreeLinkNode left, right, next;
+ *     TreeLinkNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public void connect(TreeLinkNode root) {
+        //iteration
+        //除了上下iteration还要有从左到右的iteration
+        if(root == null) return;
+        TreeLinkNode pre = root;
+        TreeLinkNode cur = null;
+        while(pre.left != null){
+            //上到下
+            cur = pre;
+            while(cur != null){
+                //左到右
+                cur.left.next = cur.right;
+                if(cur.next != null) cur.right.next = cur.next.left;
+                cur = cur.next;
+            }
+        pre = pre.left;
+        }
+    }
+    
+    /*
+    public void connect(TreeLinkNode root) {
+        //recursion
+        if(root == null) return;
+        root.next = null;
+        helper(root.left, root.right);
+    }
+    
+    private void helper(TreeLinkNode left, TreeLinkNode right){
+    //注意只有left存在才会赋值
+        if(left == null) return;
+        left.next = right;
+        right.next = null;
+        //按照人眼的顺序依次把next值付给相应的地方，从左到右
+        helper(left.left, left.right);
+        helper(left.right, right.left);
+        helper(right.left, right.right);
+    }
+    */
+}
