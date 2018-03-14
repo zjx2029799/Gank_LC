@@ -1,0 +1,22 @@
+public class Solution {
+    public boolean isValid(String s) {
+        //想到这个题，应该是要维护一个stack，因为括号一旦成一对后就可以视为valid
+        //而我们用肉眼扫描一组括号是不是valid过程就是压入栈的过程
+        if(s == null || s.length() == 0) return true;
+        Deque<Character> stack = new LinkedList<>();
+        for(int i=0; i<s.length(); i++){
+            if(s.charAt(i) == '(' || s.charAt(i) == '[' || s.charAt(i) == '{')
+                stack.addFirst(s.charAt(i));
+            else{
+                if(!stack.isEmpty()){
+                    if((s.charAt(i) == ')' && stack.removeFirst() == '(') 
+                      || (s.charAt(i) == ']' && stack.removeFirst() == '[')
+                       || (s.charAt(i) == '}' && stack.removeFirst() == '{'))
+                        continue;
+                    else return false;
+                }else return false; 
+            }
+        }
+        return stack.isEmpty();
+    }
+}
