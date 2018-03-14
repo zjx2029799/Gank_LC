@@ -14,7 +14,7 @@ class Solution {
         //因此可以用递归的思路,root节点的height为0，如果node==null，则height=-1
         return helper(root, -1, -1);
     }
-    
+    //这里在左节点递归时代入了上次计算的左子树最左深度减1，右节点递归的时候代入了上次计算的右子树最右深度减1，可以避免重复计算这些深度
     private int helper(TreeNode root, int left, int right){
         //如果没有初始化，则计算他
         if(left == -1){
