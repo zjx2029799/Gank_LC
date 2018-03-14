@@ -1,0 +1,47 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public boolean hasPathSum(TreeNode root, int sum) {
+        //iteration：遍历树的每条path，直到找到结果，如果遍历完还没有则返回false
+        //因为是一直从root遍历到leaf，所以，可以用一个stack来存每条路径的和
+        if(root == null ) return false;
+        Deque<TreeNode> stack = new LinkedList<>();
+        stack.addFirst(root);
+        while(!stack.isEmpty()){
+            TreeNode cur = stack.removeFirst();
+            //每次压入找需要改变原来的节点的值, 当到叶子节点是，自然会到了终止条件
+            if(cur.left == null && cur.right == null){
+                if(cur.val == sum) return true;
+            }
+            
+            if(cur.right != null){
+                cur.right.val = cur.val + cur.right.val;
+                stack.addFirst(cur.right);
+            }
+            if(cur.left != null){
+                cur.left.val = cur.val + cur.left.val;
+                stack.addFirst(cur.left);
+            }
+            
+        }
+        return false;
+    }
+    
+    /*
+    public boolean hasPathSum(TreeNode root, int sum) {
+        //可以直接在主函数上进行递归操作
+        //如果递归到空还是没有结果则返回false，如果左右都为空了，看是否此时的root val == sum
+        //然后分别递归左右两边
+        if(root == null) return false;
+        if(root.left == null && root.right == null) return root.val == sum;
+        return hasPathSum(root.left, sum - root.val) || hasPathSum(root.right, sum - root.val);
+    }
+    */
+}
