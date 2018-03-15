@@ -1,0 +1,19 @@
+class Solution {
+    public int[] nextGreaterElements(int[] nums) {
+        //设置一个index用来circulate循环原始数组，这里假设nums里的全是>=0的正整数
+        if(nums == null || nums.length == 0) return new int[0];
+        int[] res = new int[nums.length];
+        for(int i=0; i<nums.length; i++){
+            int index = i + 1;
+            while(nums[i] >= nums[index % nums.length]){
+                if(index % nums.length == i){
+                    res[i] = -1;
+                    break;
+                }
+                index++;
+            }
+            if(res[i] != -1) res[i] = nums[index % nums.length];
+        }
+        return res;
+    }
+}
