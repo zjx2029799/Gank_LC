@@ -1,0 +1,48 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    
+    public void flatten(TreeNode root) {
+        //recursion:假设后面全部弄好了，则当前层，只需要把root左孩子移到右边并且左边==null
+        if(root == null) return;
+        flatten(root.left);
+        flatten(root.right);
+        TreeNode left = root.left;
+        TreeNode right = root.right;
+        root.right = left;
+        root.left = null;
+        //当前层的左右调换后，遍历到当前层最右边，把当前层right 接到当前层最右边leaf node上
+        while(root.right != null){
+            root = root.right;
+        }
+        root.right = right;
+    }
+    
+    /*
+    public void flatten(TreeNode root) {
+        //can follow preorder traverse to make it but 这道题要求 inplace
+        //按照数据的结构，如果node的左孩子有右子树，则需要遍历到左孩子最右node，并且把当前root的右孩子接到这里
+        //然后把接好的放到当前root的右边并把当前root左边值为空
+        TreeNode cur = root;
+        while(cur != null){
+            if(cur.left != null){
+                TreeNode tmp = cur.left;
+                while(tmp.right != null) tmp = tmp.right;
+                tmp.right = cur.right;
+                cur.right = cur.left;
+                cur.left = null;
+            }
+            cur = cur.right;
+        }
+    }
+    
+    */
+   
+}
