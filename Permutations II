@@ -1,0 +1,32 @@
+class Solution {
+   public List<List<Integer>> permuteUnique(int[] nums) {
+       //处理duplicate，需要设置一个标志数组，让方法既可以deep下去，又可以在平移的时候找到dupliate并且跳过
+     List<List<Integer>> res = new ArrayList<>();
+     List<Integer> cur = new ArrayList<>();
+     if(nums.length == 0) return res;
+     Arrays.sort(nums);
+     boolean[] visited = new boolean[nums.length];
+     backtrack(res, cur, nums, visited);
+     return res;
+    }
+
+    private void backtrack(List<List<Integer>> res, List<Integer> cur, int[] nums, boolean[] visited){
+        if(cur.size() == nums.length){
+            res.add(new ArrayList<>(cur));
+            return;
+        }
+
+        for(int i=0; i<nums.length; i++){
+            //如果后一个前一个相等，并且前一个也没有被访问过说明这是横向移动且出现了duplicate，跳过
+            if(i > 0 && nums[i] == nums[i-1] && !visited[i-1]) continue;
+            //纵向移动确保当前层元素没有被访问过
+            if(!visited[i]){
+                visited[i] = true;
+                cur.add(nums[i]);
+                backtrack(res, cur, nums, visited);
+                cur.remove(cur.size()-1);
+                visited[i] = false;
+            }
+        }
+    }
+}
