@@ -1,0 +1,29 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public TreeNode buildTree(int[] inorder, int[] postorder) {
+        //和之前的inorder + preorder 类似，就是要找到两者的关系，通过root节点分出left right 递归
+        //postorder从后往前走，左右也和preorder反的
+        return helper(postorder, postorder.length-1, 0, inorder.length-1, inorder);
+    }
+    
+    private TreeNode helper(int[] postorder, int postIndex, int inIndex, int inEnd, int[] inorder){
+        if(postIndex < 0 || inIndex > inEnd) return null;
+        TreeNode root = new TreeNode(postorder[postIndex]);
+        int index = 0;
+        for(int i=0; i<inorder.length; i++){
+            if(inorder[i] == root.val)
+                index = i;
+        }
+        root.right = helper(postorder, postIndex-1, index+1, inEnd, inorder);
+        root.left = helper(postorder, postIndex - (inEnd - index) - 1, inIndex, index-1, inorder);
+        return root;
+    }
+}
