@@ -1,0 +1,76 @@
+class Solution {
+    
+    public int[] nextGreaterElement(int[] nums1, int[] nums2) {
+        // O(n) 复杂度，需要一个stack
+        int[] res = new int[nums1.length];
+        HashMap<Integer, Integer> map = new HashMap<>();
+        Deque<Integer> stack = new LinkedList<>();
+        int index = 0;
+        while(index < nums2.length || !stack.isEmpty()){
+            if(index == nums2.length){
+                while(!stack.isEmpty()) // 这里说明他没有
+                    map.put(stack.removeFirst(), -1);
+                break;
+            }
+            if(stack.isEmpty()){
+                stack.addFirst(nums2[index]);
+            }else{
+                while(!stack.isEmpty() && stack.peekFirst() < nums2[index])
+                    map.put(stack.removeFirst(), nums2[index]);
+                stack.addFirst(nums2[index]);
+            }
+            
+            index++;
+        }
+        
+        for(int i=0; i<nums1.length; i++){
+            res[i] = map.get(nums1[i]);
+        }
+        return res;
+    }
+    
+    /*
+    public int[] nextGreaterElement(int[] nums1, int[] nums2) {
+        //也可以用一个map记录每个nums2的值和索引，当扫描1时，找到对应索引然后,再扫描2
+        //但是这样也还是O(n*m)
+        int[] res = new int[nums1.length];
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for(int i=0; i<nums2.length; i++){
+            map.put(nums2[i], i);
+        }
+
+        for(int i=0; i<nums1.length; i++){
+            int j = map.get(nums1[i]);
+            while(j < nums2.length && nums2[j] <= nums1[i])
+                j++;
+            res[i] = j == nums2.length ? -1: nums2[j]; 
+        }
+
+        return res;
+    }
+    
+    
+    /*
+    public int[] nextGreaterElement(int[] nums1, int[] nums2) {  O(n*m)
+        //观察发现next greater number如果不存在 返回-1，存在但是按顺序扫过去超过数组边界了，也是-1
+        //需要找到1中element对应在2中的位置，然后再看哪个比它大,想到了用一个map记录下坐标然后循环
+        int[] res = new int[nums1.length];
+        if(nums1.length == 0) return new int[0];
+        for(int i=0; i<nums1.length; i++){
+            int index = 0;
+            for(int j=0; j<nums2.length; j++){
+                if(nums1[i] == nums2[j]){
+                    index = j;
+                    break;
+                }
+            }
+            
+            while(index < nums2.length && nums2[index] <= nums1[i])
+                index++;
+            res[i] = index == nums2.length ? -1: nums2[index];
+            
+        }
+        return res;
+    }
+    */
+}
