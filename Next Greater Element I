@@ -11,12 +11,16 @@ class Solution {
                 while(!stack.isEmpty()) // 这里说明他没有
                     map.put(stack.removeFirst(), -1);
                 break;
+                //进行到最后了需要直接退出循环
             }
             if(stack.isEmpty()){
+                //如果stack里没有元素，直接入栈
                 stack.addFirst(nums2[index]);
             }else{
+                //如果有，判断大小持续输出栈顶元素和比他大的cur 放入map里，直到循环结束
                 while(!stack.isEmpty() && stack.peekFirst() < nums2[index])
                     map.put(stack.removeFirst(), nums2[index]);
+                //结束后，将当前element 入栈
                 stack.addFirst(nums2[index]);
             }
             
