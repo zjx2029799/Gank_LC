@@ -1,0 +1,22 @@
+class Solution {
+    public List<List<Integer>> combinationSum3(int k, int n) {
+        //没有duplicate，但是长度固定且不能出现交换顺序list相同的情况
+        List<List<Integer>> res = new ArrayList<>();
+        List<Integer> list = new ArrayList<>();
+        backtrack(res, list, n, k, 1); // index from 1 to 9
+        return res;
+    }
+    
+    private void backtrack(List<List<Integer>> res, List<Integer> list, int remain, int k, int index){
+        if(list.size() == k && remain == 0){
+            res.add(new ArrayList<>(list));
+            return;
+        }
+        if(list.size() == k && remain < 0) return;
+        for(int i=index; i<10; i++){
+            list.add(i);
+            backtrack(res, list, remain - i, k, i+1);
+            list.remove(list.size()-1);
+        }
+    }
+}
