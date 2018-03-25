@@ -1,0 +1,23 @@
+class Solution {
+    public String reverseWords(String s) {
+        //最简单的想法，拆分word，然后单个反转，最后接起来
+        if(s == null || s.length() == 0) return "";
+        String[] strs = s.split(" ");
+        StringBuilder sb = new StringBuilder();
+        for(int i=0; i<strs.length; i++){
+            if(i == strs.length - 1)
+                sb.append(reverse(strs[i]));
+            else
+                sb.append(reverse(strs[i])).append(" ");
+        }
+        return sb.toString();
+    }
+    
+    private String reverse(String s){
+        if(s.length() <= 1)
+            return s;
+        String left = reverse(s.substring(0, s.length()/2));
+        String right = reverse(s.substring(s.length()/2));
+        return right + left;
+    }
+}
