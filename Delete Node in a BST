@@ -1,0 +1,75 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public TreeNode deleteNode(TreeNode root, int key) {
+        //easy recursive way.
+        if(root == null) return null;
+        if(root.val > key)
+            root.left = deleteNode(root.left, key);
+        else if(root.val < key)
+            root.right = deleteNode(root.right, key);
+        else{
+            //key == root.val
+            //判断是否有左右子树
+            if(root.left == null)
+                return root.right; // 如果左边空的，则直接返回右子树，删去此时的root
+            else if(root.right == null)
+                return root.left;
+            //如果都不为空，则需要找到当前node的右子树的最左节点来接替root
+            TreeNode tar = findTar(root.right);
+            root.val = tar.val;
+            //赋值后左右两边不变，并且删除target节点
+            root.right = deleteNode(root.right, root.val);
+        }
+       return root; 
+    }
+    
+    private TreeNode findTar(TreeNode root){
+        while(root.left != null)
+            root = root.left;
+        return root;
+    }
+    
+    /*
+    public TreeNode deleteNode(TreeNode root, int key) {
+         if(root==null) return root;
+        TreeNode dummy = new TreeNode(0);
+        dummy.left = root;
+        TreeNode pre = dummy;
+       TreeNode cur = root;
+        while (cur!=null&&cur.val!=key){
+            pre = cur;
+            if(cur.val>key) cur = cur.left;
+            else cur = cur.right;
+        }
+        if(cur==null) return dummy.left;
+        TreeNode tar = cur;
+       
+        if(cur.left!=null&&cur.right!=null){
+            pre = cur;
+            cur = cur.right;
+            //替换节点 right child 里最左边的,也可以是左子树里最右边的
+            while (cur.left!=null){
+                pre = cur;
+                cur = cur.left;
+            }
+            tar.val = cur.val;
+        }
+        if(cur.left!=null){
+            if(pre.left==cur) pre.left = cur.left;
+            else pre.right = cur.left;
+        }else {
+            if(pre.left==cur) pre.left = cur.right;
+            else pre.right = cur.right;
+        }
+        return dummy.left;
+    }
+    */
+}
