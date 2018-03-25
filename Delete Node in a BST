@@ -49,13 +49,16 @@ public class Solution {
             if(cur.val>key) cur = cur.left;
             else cur = cur.right;
         }
+        //没找到这个node，直接返回当前树
         if(cur==null) return dummy.left;
+        //找到了
         TreeNode tar = cur;
        
         if(cur.left!=null&&cur.right!=null){
+        //开始寻找右子树的最左节点，因为左右子树都不为空
             pre = cur;
             cur = cur.right;
-            //替换节点 right child 里最左边的,也可以是左子树里最右边的
+            
             while (cur.left!=null){
                 pre = cur;
                 cur = cur.left;
