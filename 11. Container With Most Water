@@ -1,0 +1,51 @@
+class Solution {
+    
+    public int maxArea(int[] height) {
+        //左右至针法，因为只看两边的高度和相差的长度，所以哪边低就继续移动哪边的指针
+        if (height == null) return 0;
+        int left = 0;
+        int right = height.length - 1;
+        int max = 0;
+        while(left < right){
+            if(height[left] < height[right]){
+                max = Math.max(max, height[left] * (right - left) );
+                left++;
+            }else{
+                max = Math.max(max, height[right] * (right - left) );
+                right--;
+            }
+            
+    //max = Math.max(max, height[left] < height[right] ? height[left] * (right - (left++)) : height[right] * (right--) - left))
+        }
+        return max;
+    }
+    
+    /*  exceed time 每个都算一次左右构成的container面积
+    public int maxArea(int[] height) {
+        if (height == null) return 0;
+        int left = 0;
+        int right = height.length - 1;
+        int gloMax = Integer.MIN_VALUE;
+        for(int i=0; i<height.length; i++){
+            int max = 0;
+            int indexl = i - 1;
+            int indexr = i + 1;
+            while(indexr <= right){
+                if(height[indexr] >= height[i]){
+                    max = Math.max(max, height[i] * (indexr - i));
+                }
+                indexr++;
+            }
+            
+            while(indexl >= left){
+                if(height[indexl] >= height[i]){
+                     max = Math.max(max, height[i] * (i - indexl));
+                }
+                indexl--;
+            }
+            gloMax = Math.max(max, gloMax);
+        }
+         return gloMax;                                      
+    }
+    */
+}
