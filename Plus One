@@ -1,0 +1,18 @@
+class Solution {
+    public int[] plusOne(int[] digits) {
+        //只需要考虑进位的问题,只要大于9，就设为0，后面再计算，只要不大于9直接返回该位数字加一的数组
+        if(digits == null) return null;
+        int len = digits.length;
+        //变成（1，0）后不影响后面的位，因此就两种情况
+        for(int i=len-1; i>=0; i--){
+            if(digits[i] < 9){
+                digits[i]++;
+                return digits;
+            }
+            digits[i] = 0;
+        }
+        int[] res = new int[len + 1];
+        res[0] = 1;
+        return res;
+    }
+}
