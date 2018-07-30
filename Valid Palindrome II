@@ -1,0 +1,55 @@
+class Solution {
+    public boolean validPalindrome(String s) {
+        //greedy: s[i,j] is false, then s[i+1,j] or s[i, j-1], but if s[i,j] is true, then go on to judge s[i+1, j-1]
+        int left = 0;
+        int right = s.length()-1;
+        //如果不成立，则需要一方退回去一步再判断
+        while(left < right){
+            if(s.charAt(left) != s.charAt(right)) return helper(s, left, right-1) || helper(s, left+1, right);
+            left ++;
+            right --;
+        }
+        return true;
+    }
+    
+    private boolean helper(String s, int i, int j){
+        int left = i;
+        int right = j;
+        while(left < right){
+            if(s.charAt(left) != s.charAt(right)){
+                return false;
+            }
+            left ++;
+            right --;
+        }
+        return true;
+    }
+    
+    /* Time exceed
+    public boolean validPalindrome(String s) {
+        if(s == null || s.length() == 0) return true;
+        //判断是不是回文，写一个回文函数然后如果不是，就逐个删除直到是为止，O（n）
+        StringBuilder sb = new StringBuilder(s);
+        for(int i=0; i<s.length(); i++){
+            char c = s.charAt(i);
+            sb.deleteCharAt(i);
+            if(helper(sb.toString())) return true;
+            sb.insert(i, c);
+        }
+        return helper(s);
+    }
+    
+    private boolean helper(String s){
+        int left = 0;
+        int right = s.length()-1;
+        while(left < right){
+            if(s.charAt(left) != s.charAt(right)){
+                return false;
+            }
+            left ++;
+            right --;
+        }
+        return true;
+    }
+    */
+}
