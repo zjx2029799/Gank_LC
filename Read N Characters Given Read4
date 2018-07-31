@@ -1,0 +1,24 @@
+/* The read4 API is defined in the parent class Reader4.
+      int read4(char[] buf); */
+
+public class Solution extends Reader4 {
+    /**
+     * @param buf Destination buffer
+     * @param n   Maximum number of characters to read
+     * @return    The number of characters read
+     */
+    public int read(char[] buf, int n) {
+        int index = 0;
+        while(true){
+            //开始读入
+            char[] bufs = new char[4];
+            //实际读到的字符数
+            int size = read4(bufs);
+            //bufs赋值buf
+            for(int i=0; i<size && index<n; i++){
+                buf[index++] = bufs[i];
+            }
+            if(size == 0) return index;
+        }
+    }
+}
