@@ -1,0 +1,16 @@
+class Solution {
+    public int mySqrt(int x) {
+        //从2的平方一直算到x，可能会超时，所以要快，二分法
+        if(x <= 1) return x;
+        long left = 1;
+        long right = x;
+        //注意这里是 left < right - 1 否则会超时
+        while(left < right - 1){
+            long mid = left + (right - left)  / 2;
+            if(mid * mid == x) return (int)mid;
+            if(mid * mid < x) left = mid;
+            else right = mid;
+        }
+        return right * right <= x? (int)right: (int)left;
+    }
+}
