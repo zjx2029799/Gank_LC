@@ -1,0 +1,52 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public boolean isSubtree(TreeNode s, TreeNode t) {
+        //easy traverse and compare
+        if(t == null) return true;
+        if(s == null && t == null) return true;
+        if(s == null) return false;
+        return traverse(s, t);
+    }
+    /*
+    public boolean isSubtree(TreeNode s, TreeNode t) {
+        //traverse level order and compare
+        if(t == null) return true;
+        if(s == null && t == null) return true;
+        if(s == null) return false;
+        //当在s中找到t的头的时候开始对比两个子树
+        Deque<TreeNode> q = new LinkedList<>();
+        q.addFirst(s);
+        while(!q.isEmpty()){
+            int len = q.size();
+            for(int i=0; i<len; i++){
+                TreeNode cur = q.removeLast();
+                if(cur.val == t.val && helper(cur, t))
+                    return true;
+                if(cur.left != null) q.addFirst(cur.left);
+                if(cur.right != null) q.addFirst(cur.right);
+            }
+        }
+        return false;
+    }
+    */
+    private boolean helper(TreeNode s, TreeNode t){
+        if(s == null && t == null)
+            return true;
+        else if(s == null || t == null) return false;
+        else if(s.val != t.val) return false;
+        return helper(s.left, t.left) && helper(s.right, t.right);
+    }
+    
+    private boolean traverse(TreeNode s, TreeNode t){
+        return s != null && (helper(s, t) || traverse(s.left, t) || traverse(s.right, t) );
+    }
+    
+}
