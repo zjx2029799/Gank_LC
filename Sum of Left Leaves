@@ -1,0 +1,23 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public int sumOfLeftLeaves(TreeNode root) {
+        if(root == null) return 0;
+        return helper(root, false);
+    }
+    
+    private int helper(TreeNode root, boolean isLeaf){
+        //左边需要判断是不是叶子，右边只要不是叶子都跳过一次在看是不是左边的叶子
+        if(root == null) return 0;
+        if(root.left == null && root.right == null && isLeaf) return root.val;
+        return helper(root.left, true) + helper(root.right, false);
+    }
+
+}
