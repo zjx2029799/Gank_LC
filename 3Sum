@@ -1,0 +1,43 @@
+class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        //using the idea of two sum, one pointer 
+        List<List<Integer>> res = new ArrayList<>();
+        if(nums == null || nums.length < 3) return res;
+        Arrays.sort(nums);
+        for(int i=0; i<nums.length - 2; i++){
+            if(i > 0 && (nums[i-1] == nums[i]))
+                continue;
+            List<List<Integer>> tmp = twoSum(nums, i, 0 - nums[i]);
+            res.addAll(tmp);
+        }
+        return res;
+    }
+    
+    private List<List<Integer>> twoSum(int[] nums, int index, int target){
+        int left = index + 1;
+        int right = nums.length - 1;
+        List<List<Integer>> res = new ArrayList<>();
+        while(left < right){
+            List<Integer> list = new ArrayList<>();
+            if(nums[left] + nums[right] == target){
+                list.add(nums[left]);
+                list.add(nums[right]);
+                list.add(nums[index]);
+                res.add(list);
+                
+            do{
+                left ++;
+            }while(left < nums.length && nums[left] == nums[left - 1]);
+            
+            do{
+                right --;
+            }while(right >= 0 && nums[right] == nums[right + 1]);
+            
+            }else if(nums[left] + nums[right] < target)
+                left ++;
+            else 
+                right --;
+        }
+        return res;
+    }
+}
