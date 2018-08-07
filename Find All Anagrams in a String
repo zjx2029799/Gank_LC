@@ -1,0 +1,40 @@
+class Solution {
+    public List<Integer> findAnagrams(String s, String p) {
+        List<Integer> res = new ArrayList<>();
+       if(s == null || p == null || s.length() < p.length()) return res;
+        int[] hash = new int[256];
+        //hash all of the elements in p
+        for(char c: p.toCharArray()){
+            hash[c]++;
+        }
+        
+        //begin to sliding window
+        int left = 0; 
+        int right = 0;
+        int count = p.length();
+        while(right < s.length()){
+            //two sliding window pointer scan string s, when scanned, the hash[index]--, 
+            //when kick out one valued element, hash[index] ++
+            // right pointer move each step
+            //when count == 0 return left index, the head of the window
+            if(hash[s.charAt(right)] >= 1){
+                count--;
+            }
+            hash[s.charAt(right)]--;
+            right++;
+            
+            if(count == 0) res.add(left);
+            
+            if(right - left == p.length()){
+                if(hash[s.charAt(left)] >= 0){
+                    count++;
+                }
+                //left pointer move only when right - left == length
+                hash[s.charAt(left)]++;
+                left++;
+            }
+            
+        }
+        return res;
+    }
+}
