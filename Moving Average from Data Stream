@@ -1,0 +1,26 @@
+class MovingAverage {
+    
+    int sum = 0;
+    int size = 0;
+    Deque<Integer> q;
+    /** Initialize your data structure here. */
+    public MovingAverage(int size) {
+        q = new LinkedList<>();
+        this.size = size;
+    }
+    
+    public double next(int val) {
+        sum += val;
+        q.addFirst(val);
+        if(q.size() > size){
+            sum -= q.removeLast();
+        }
+        return (double)sum / q.size();
+    }
+}
+
+/**
+ * Your MovingAverage object will be instantiated and called as such:
+ * MovingAverage obj = new MovingAverage(size);
+ * double param_1 = obj.next(val);
+ */
