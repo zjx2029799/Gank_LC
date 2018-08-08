@@ -1,0 +1,21 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public int closestValue(TreeNode root, double target) {
+        //BST search and carry the abs(target - node.val) 的最小值
+        int flag = root.val;
+        while(root != null){
+            if(Math.abs(target - root. val) < Math.abs(target - flag))
+                flag = root.val;
+            root = target > root.val? root.right : root.left;
+        } 
+        return flag;
+    }
+}
