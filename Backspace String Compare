@@ -1,0 +1,38 @@
+class Solution {
+    public boolean backspaceCompare(String S, String T) {
+        //two stack
+        Deque<Character> stack1 = new LinkedList<>();
+        Deque<Character> stack2 = new ArrayDeque<>();
+        char[] s = S.toCharArray();
+        char[] t = T.toCharArray();
+        for(char c: s){
+            if(c == '#'){
+                if(!stack1.isEmpty())
+                    stack1.removeFirst();
+            }else
+                stack1.addFirst(c);
+        }
+        
+        for(char c: t){
+            if(c == '#'){
+                if(!stack2.isEmpty())
+                    stack2.removeFirst();
+            }else
+                stack2.addFirst(c);
+        }
+        /* normal way:
+        if(stack1.isEmpty() && stack2.isEmpty())
+            return true;
+        if(stack1.size() != stack2.size()) 
+            return false;
+        for(int i=0; i<stack1.size(); i++){
+            char ss = stack1.removeFirst();
+            char tt = stack2.removeFirst();
+            if(ss != tt) return false;
+        }
+        return true;
+        */
+        //也可以直接当作string对比，用equals函数
+        return String.valueOf(stack1).equals(String.valueOf(stack2));
+    }
+}
