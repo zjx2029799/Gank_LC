@@ -1,0 +1,42 @@
+class Solution {
+    public int[] productExceptSelf(int[] nums) {
+        //可以只用一个数组固定space
+        int len = nums.length;
+        int[] res = new int[len];
+        res[0] = 1;
+        //calculate left product
+        for(int i=1; i<len; i++){
+            res[i] = res[i-1] * nums[i-1];
+        }
+        int right = 1;
+        for(int i = len-1; i>=0; i--){
+            res[i] = right * res[i];
+            right = right * nums[i];
+        }
+        return res;
+    }
+    
+    /*
+    public int[] productExceptSelf(int[] nums) {
+        //每个位置上都是除去该位置数字以外的其他所有数字乘积
+        //前面所有的乘积 * 后面所有数字的乘积  选择一个前置forward数组和后置backward数组分别存一个位置上前面所有乘积和后面所有乘积
+        int len = nums.length;
+        int[] f = new int[len];
+        int[] b = new int[len];
+        f[0] = 1;
+        b[len-1] = 1;
+        for(int i=1; i<len; i++){
+            f[i] = f[i-1] * nums[i-1];
+        }
+        for(int i=len-2; i>=0; i--){
+            b[i] = b[i+1] * nums[i+1];
+        }
+        
+        int[] res = new int[len];
+        for(int i=0; i<len; i++){
+            res[i] = f[i] * b[i];
+        }
+        return res;
+    }
+    */
+}
