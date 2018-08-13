@@ -1,0 +1,31 @@
+class Solution {
+    public List<Integer> topKFrequent(int[] nums, int k) {
+        //<=O(nlogn)， 说明不能先排序,需要建立数字与其出现频率的对应关系，因此想到用hash表
+        //建立好后因为需要输出前k个，需要把hash表按照频次排序：两种方法：1.建立大顶堆，priorityQueue  2. bucket排序
+        Map<Integer, Integer> map = new HashMap<>();
+        for(int i=0; i<nums.length; i++){
+            if(map.containsKey(nums[i]))
+                map.put(nums[i], map.get(nums[i])+1);
+            else
+                map.put(nums[i], 1);
+        }
+        List<Integer> res = new ArrayList<>();
+        //bucket sort
+        List<Integer>[] buckets = new ArrayList[nums.length+1];
+        for(Integer key: map.keySet()){
+            //出现频次相同的列为一个list
+            int count = map.get(key);
+            if(buckets[count] == null){
+                buckets[count] = new ArrayList<>();
+            }
+            buckets[count].add(key);
+        }
+        //倒叙输出
+        for(int i=nums.length; i>=0; i--){
+            if(buckets[i] != null && res.size() < k)
+                res.addAll(buckets[i]);
+        }
+        
+        return res;
+    }
+}
