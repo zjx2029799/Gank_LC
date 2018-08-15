@@ -1,0 +1,50 @@
+class Solution {
+    //bfs   beats 30%
+    public void wallsAndGates(int[][] rooms) {
+        //bfs four-direction search
+        int[][] dir = {{0,-1},{0,1},{1,0},{-1,0}};
+        Deque<int[]> q = new LinkedList<>();
+        for(int i=0; i<rooms.length; i++){
+            for(int j=0; j<rooms[0].length; j++){
+                if(rooms[i][j] == 0)
+                    q.addLast(new int[] {i, j});
+            }
+        }
+        
+        while(!q.isEmpty()){
+            int[] cur = q.removeFirst();
+            int row = cur[0];
+            int col = cur[1];
+            for(int k=0; k<dir.length; k++){
+                int x = row + dir[k][0];
+                int y = col + dir[k][1];
+                if(x < 0 || x >= rooms.length || y < 0 || y >= rooms[0].length || rooms[x][y] < rooms[row][col] + 1)
+                    continue;
+                rooms[x][y] = rooms[row][col] + 1;
+                q.addLast(new int[] {x, y});
+            }
+        }
+    }
+    
+    /*
+    //dfs  beats 98%
+    public void wallsAndGates(int[][] rooms) {
+        for(int i=0; i<rooms.length; i++){
+            for(int j=0; j<rooms[0].length; j++){
+                if(rooms[i][j] == 0)
+                    dfs(rooms, i, j, 0);
+            }
+        }
+    }
+    
+    private void dfs(int[][] rooms, int i, int j, int val){
+        if(i < 0 || i >= rooms.length || j < 0 || j >= rooms[0].length || rooms[i][j] < val)
+            return;
+        rooms[i][j] = val;
+        dfs(rooms, i+1, j, val + 1);
+        dfs(rooms, i-1, j, val + 1);
+        dfs(rooms, i, j+1, val + 1);
+        dfs(rooms, i, j-1, val + 1);
+    }
+    */
+}
