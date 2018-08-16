@@ -1,0 +1,21 @@
+class Solution {
+    public int[] sortTransformedArray(int[] nums, int a, int b, int c) {
+        //考虑到二次函数的特殊性，如果a>=0， 则两段的点对应的值肯定有一个是最大值
+        //相反如果a<0，则两个端点出对应的肯定有最小的
+        int i = 0;
+        int j = nums.length - 1;
+        int[] res = new int[nums.length];
+        int index = a >= 0? nums.length - 1: 0;
+        while(i <= j){
+            if(a >= 0){
+                res[index--] = formular(a, b, c, nums[i]) >= formular(a, b, c, nums[j])? formular(a, b, c, nums[i++]): formular(a, b, c, nums[j--]);
+            }else{
+                res[index++] = formular(a, b, c, nums[i]) >= formular(a, b, c, nums[j])? formular(a, b, c, nums[j--]): formular(a, b, c, nums[i++]);
+            }
+        }
+        return res;
+    }
+    private int formular(int a, int b, int c, int x){
+        return a*(x*x) + b*x + c;
+    }
+}
