@@ -1,0 +1,39 @@
+class Solution {
+    public int[] findDiagonalOrder(int[][] matrix) {
+        //根据matrix的特点可以总结出两个大类：up or down
+        //按顺序取行列的index对2取余数可以得到本次循环是up还是down
+        //两个大类中分三个小类，对于up，考虑row==0 和 col == n-1，和其他
+        //对于down来说考虑 col == 0 和 row == m-1， 和其他
+        if (matrix.length == 0) return new int[0];
+        int m = matrix.length;
+        int n = matrix[0].length;
+        int[] res = new int[m*n];
+        int row = 0;
+        int col = 0;
+        for(int i=0; i<res.length; i++){
+            res[i] = matrix[row][col];
+            if((row + col) % 2 == 0){
+                //up 下面三个判断有先后顺序，不然会index益出，要先判断边界
+                if(col == n - 1) row++;
+                else if(row == 0) col++;
+                else{
+                    row--;
+                    col++;
+                }
+            }else{
+                //down
+                if(row == m-1) col++;
+                else if(col == 0) row++;
+                else{
+                    row++;
+                    col--;
+                }
+            }
+        }
+        return res;
+    }
+}
+
+
+
+
