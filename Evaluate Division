@@ -1,0 +1,51 @@
+class Solution {
+    public double[] calcEquation(String[][] equations, double[] values, String[][] queries) {
+        //建立一张有向图
+        Map<String, ArrayList<String>> nodes = new HashMap<>();
+        Map<String, ArrayList<Double>> valuess = new HashMap<>();
+        
+        for(int i=0; i<equations.length; i++){
+            String[] equation = equations[i];
+            if(!nodes.containsKey(equation[0])){
+                nodes.put(equation[0], new ArrayList<>());
+                valuess.put(equation[0], new ArrayList<>());
+            }
+            if(!nodes.containsKey(equation[1])){
+                nodes.put(equation[1], new ArrayList<>());
+                valuess.put(equation[1], new ArrayList<>());
+            }
+            nodes.get(equation[0]).add(equation[1]);
+            nodes.get(equation[1]).add(equation[0]);
+            valuess.get(equation[0]).add(values[i]);
+            valuess.get(equation[1]).add(1 / values[i]);
+        }
+        
+        //dfs graph
+        double[] res = new double[queries.length];
+        for(int i=0; i<res.length; i++){
+            String[] query = queries[i];           
+            res[i] = dfs(query[0], query[1], nodes, valuess, new HashSet<String>(), 1.0);
+            if(res[i] == 0.0) res[i] = -1;
+        }
+        return res;
+    }
+    
+    private double dfs(String start, String end, Map<String, ArrayList<String>> nodes, Map<String, ArrayList<Double>> values, HashSet<String> set, double value){
+        //找到一个环
+        if(set.contains(start)) return 0.0;
+        if(!nodes.containsKey(start)) return 0.0;
+        if(start.equals(end)) return value;
+        set.add(start);
+        
+        List<String> nodeList = nodes.get(start);
+        List<Double> valueList = values.get(start);
+        double tmp = 0.0;
+        for(int i=0; i<nodeList.size(); i++){
+            tmp = dfs(nodeList.get(i), end, nodes, values, set, value*valueList.get(i));
+            if(tmp != 0.0)
+                break;
+        }
+        set.remove(start);
+        return tmp;
+    }
+}
