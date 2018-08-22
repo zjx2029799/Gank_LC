@@ -1,0 +1,56 @@
+class Solution {
+    private  List<String> odd = new ArrayList<>(Arrays.asList("0", "1", "8"));
+    private  List<String> even = new ArrayList<>(Arrays.asList("00", "11", "88", "69", "96"));
+    
+    public List<String> findStrobogrammatic(int n) {     
+        List<String> res = dfs(n);
+        for(int i=0; i<res.size(); i++){
+            String str = res.get(i);
+            if((Long.parseLong(str) + "").length() != n ){
+                res.remove(i);
+                i--;
+            }
+        }
+        return res;
+    }
+    
+    private List<String> dfs(int m){
+        List<String> list = new ArrayList<>();
+        if(m <= 0) return list;
+        if(m == 1) return odd;
+        if(m == 2) return even;
+        
+        List<String> tmp = dfs(m-2);
+        for(String str: tmp){
+            tmp.add("0" + str + "0");
+            tmp.add("1" + str + "1");
+            tmp.add("6" + str + "9");
+            tmp.add("8" + str + "8");
+            tmp.add("9" + str + "6");
+        }
+        return tmp;
+    }
+    
+    /*
+    public List<String> findStrobogrammatic(int n) {
+        //recursion n and n-2 have connection
+        return helper(n, n);
+    }
+    
+    private List<String> helper(int m, int n){
+        if(m <= 0) return new ArrayList<String>(Arrays.asList(""));
+        if(m == 1) return new ArrayList<String>(Arrays.asList("0", "1", "8"));
+        
+        List<String> subList = helper(m-2, n);
+        List<String> tmp = new ArrayList<>();
+        for(String str: subList){
+            if(m != n) tmp.add("0" + str + "0");
+            tmp.add("1" + str + "1");
+            tmp.add("6" + str + "9");
+            tmp.add("8" + str + "8");
+            tmp.add("9" + str + "6");
+        }
+        return tmp;
+    }
+    */
+}
