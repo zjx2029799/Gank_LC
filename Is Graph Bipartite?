@@ -1,0 +1,21 @@
+class Solution {
+    public boolean isBipartite(int[][] graph) {
+        //初始化，color==0
+        int[] colors = new int[graph.length];
+        for(int i=0; i<graph.length; i++){
+            //如果未被访问
+            if(colors[i] == 0 && !isValid(graph, 1, i, colors))
+                return false;
+        }
+        return true;
+    }
+    private boolean isValid(int[][] graph, int color, int cur, int[] colors){
+        if(colors[cur] != 0) return color == colors[cur];
+        colors[cur] = color;
+        for(int i: graph[cur]){
+            if(!isValid(graph, color * -1, i, colors))
+                return false;
+        }
+        return true;
+    }
+}
