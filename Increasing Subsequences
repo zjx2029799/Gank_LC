@@ -1,0 +1,30 @@
+class Solution {
+    public List<List<Integer>> findSubsequences(int[] nums) {
+        //solution of subset
+        //这里用一个Set of List，就可以除去所有重复的子集
+        Set<List<Integer>> res = new HashSet<>();
+        //不可以先sort，因为不能改变数组顺序
+        List<Integer> list = new ArrayList<>();
+        helper(res, list, nums, 0);
+        List result = new ArrayList(res);
+        return result;
+    }
+    
+    private void helper(Set<List<Integer>> res, List<Integer> list, int[] nums, int index){
+        if(list.size() >= 2){
+            res.add(new ArrayList<>(list));
+        }
+        
+        for(int i=index; i<nums.length; i++){
+            //设定只有当list长度为0或者后一个大于等于前一个的时候才添加进去
+            if(list.size() == 0 || list.get(list.size() - 1) <= nums[i]){
+                list.add(nums[i]);
+                helper(res, list, nums, i+1);
+                list.remove(list.size()-1);
+            }  
+        }
+    }
+}
+
+
+
