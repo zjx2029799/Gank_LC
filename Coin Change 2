@@ -1,0 +1,38 @@
+class Solution {
+    public int change(int amount, int[] coins) {
+        //改进 复杂度 m*n
+        //我们发现每次算 f[i][j] = f[i-1][j] + f[i-1][j-coins[i-1]] + f[i-1][j-2*coins[i-1]]...
+        //除了一次coins[i-1]都不用的情况，剩下的都 = f[i][j-coins[i-1]] = f[i-1][j-coins[i-1]] + f[i-1][j-2*coins[i-1]]......
+        //因此 f[i][j] = f[i-1][j] + f[i][j-coins[i-1]]
+        int[][] dp = new int[coins.length+1][amount+1];
+        //base case: 
+        Arrays.fill(dp[0], 0);
+        dp[0][0] = 1;
+        
+        for(int i=1; i<dp.length; i++){
+            for(int j=0; j<dp[0].length; j++){
+                dp[i][j] = dp[i-1][j] + (j >= coins[i-1] ? dp[i][j - coins[i-1]]: 0);
+            }
+        }
+        return dp[coins.length][amount];
+    }
+    /*
+    public int change(int amount, int[] coins) {
+        //复杂度 m * n^2  参照视频：https://www.youtube.com/watch?v=ZKAILBWl08g
+        //native dp f[i][j] 给i 种硬币，一共有多少种方案使得和=amount j 
+        //initialize array
+        int[][] dp = new int[coins.length+1][amount+1];
+        //base case: 
+        Arrays.fill(dp[0], 0);
+        dp[0][0] = 1;
+        for(int i=1; i<dp.length; i++){
+            for(int j=0; j<dp[0].length; j++){
+                for(int k=0; k * coins[i-1] <= j; k++){
+                    dp[i][j] += dp[i-1][j - k*coins[i-1]];
+                }
+            }
+        }
+        return dp[coins.length][amount];
+    }
+    */
+}
