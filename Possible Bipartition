@@ -1,0 +1,62 @@
+class Solution {
+    ArrayList<Integer>[] graph;
+    Map<Integer, Integer> color;
+    public boolean possibleBipartition(int N, int[][] dislikes) {
+        //染色法，先创建一个图
+        if(dislikes == null || dislikes.length == 0 || dislikes[0] == null || dislikes[0].length == 0)
+            return true;
+        graph = new ArrayList[N+1];
+        color = new HashMap<>();
+        for(int i=1; i<=N; i++){
+            graph[i] = new ArrayList<Integer>();
+        }
+        
+        //create the connect graph
+        for(int[] edge: dislikes){
+            graph[edge[0]].add(edge[1]);
+            graph[edge[1]].add(edge[0]);
+        }
+        //dfs || bfs
+        for(int i=1; i<=N; i++){
+            //如果没被访问过，则判断它是不是有矛盾的染色
+            if(!color.containsKey(i) && !bfs(i) )
+                return false;
+        }
+        
+        return true;
+    }
+    //bfs
+    private boolean bfs(int node){
+        Deque<Integer> q = new LinkedList<>();
+        q.offerFirst(node);
+        color.put(node, 0);
+        while(!q.isEmpty()){
+            int cur = q.removeLast();
+            int c = color.get(cur);
+            for(int nei: graph[cur]){
+                //未被访问
+                if(!color.containsKey(nei)){
+                    color.put(nei, c ^ 1);
+                    q.offerFirst(nei);
+                }else{
+                    if(color.get(nei) == c)
+                        return false;
+                }
+            }
+        }
+        return true;
+    }
+    
+    //dfs
+    private boolean dfs(int node, int c){
+        if(color.containsKey(node)){
+            return c == color.get(node);
+        }
+        color.put(node, c);
+        for(int nei: graph[node]){
+            if(!dfs(nei, c ^ 1))
+                return false;
+        }
+        return true;
+    }
+}
