@@ -1,0 +1,70 @@
+class Solution {
+    public int coinChange(int[] coins, int amount) {
+        //优化完时间，继续优化空间
+        //根据时间优化我们得到 f[i][j] = min(f[i+1][j], f[i][j-coin[i]] + 1)
+        //所以其实我们只需要一个一维数组去维护我们需要的数据就好对于每个cell f[i][j] 只要有 f[i][0..j-1] append f[i+1][j...amount]的一维数组
+        int[] dp = new int[amount+1];
+        Arrays.fill(dp, Integer.MAX_VALUE);
+        dp[0] = 0;
+        for(int i=coins.length-1; i>=0; i--){
+            for(int j=0; j<=amount; j++){
+                if(j >= coins[i]){
+                    int pre = dp[j - coins[i]];
+                    if(pre < Integer.MAX_VALUE)
+                        dp[j] = Math.min(dp[j], pre + 1);
+                }
+            }
+        }
+        return dp[amount] == Integer.MAX_VALUE? -1: dp[amount];
+    }
+    
+    /*
+    public int coinChange(int[] coins, int amount) {
+        //改进方法，加速induction rule的运算，需要找到运算的重复部分   讲解 https://www.youtube.com/watch?v=htdBJul3xoc
+        //f[i][j] = Min( f[i+1][j], f[i+1][j - coin[i]] + 1, ....f[i+1][j - k * coin[i]] + k)
+        //等价与 f[i][j] = Min( f[i+1][j], Min(f[i+1][j - coin[i]] + 1, ....f[i+1][j - k * coin[i]] + k))
+        //Min(f[i+1][j - coin[i]] + 1, ....f[i+1][j - k * coin[i]] + k)部分等价于 Min(f[i+1][j - coin[i]], f[i+1][j - coin[i]]*2 + 1...)  == Min(f[i+1][j-coin[i]] + 1 )
+        // conclusion: f[i][j] = Min(f[i+1][j], f[i+1][j-coin[i]] + 1)
+         int[][] dp = new int[coins.length+1][amount+1];
+        Arrays.fill(dp[coins.length], Integer.MAX_VALUE);
+        dp[coins.length][0] = 0;
+        for(int i=coins.length-1; i>=0; i--){
+            for(int j=0; j<=amount; j++){
+                dp[i][j] = dp[i+1][j];
+                if(j >= coins[i]){
+                    int pre = dp[i][j - coins[i]];
+                    if(pre < Integer.MAX_VALUE)
+                        dp[i][j] = Math.min(dp[i][j], pre + 1);
+                }
+            }
+        }
+        return dp[0][amount]==Integer.MAX_VALUE? -1: dp[0][amount];
+        
+    }
+    */
+    /*
+    public int coinChange(int[] coins, int amount) {
+        //只需要返回最少的coin数量，可以使用贪心算法
+        //每次减去coin里面值最大的，直到最后剪到0 返回coin总数，如果最后没减到0则返回-1
+       //但是贪心的种类不一定每次都是最优解，所以依然用DP
+        //问题设置 f[i][j]表示只用 i到n-1 种硬币，我最少需要多少个硬币可以得到amount j
+        //base case是当i=n时，而不是=0， 因为i=0时，问题变成了给0到n-1最少多少个=amount是规模最大的时候
+        //base case 为当 i=n 也就是不给硬币能得到 amount = 0 f[n][0] = 0    f[n][i=1....amount] = infinit
+        //indicient f[i][j] = Min( f[i+1][j], f[i+1][j - coin[i]] + 1, ....f[i+1][j - k * coin[i]] + k)
+        int[][] dp = new int[coins.length+1][amount+1];
+        Arrays.fill(dp[coins.length], Integer.MAX_VALUE);
+        dp[coins.length][0] = 0;
+        for(int i=coins.length-1; i>=0; i--){
+            for(int j=0; j<=amount; j++){
+                dp[i][j] = dp[i+1][j];
+                for(int k=1; k * coins[i] <= j; k++){
+                    int pre = dp[i+1][j - coins[i] * k];
+                    if(pre < Integer.MAX_VALUE)
+                        dp[i][j] = Math.min(dp[i][j], pre + k);
+                }
+            }
+        }
+        return dp[0][amount]==Integer.MAX_VALUE? -1: dp[0][amount];
+    }
+    */
+}
