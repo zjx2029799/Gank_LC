@@ -1,0 +1,26 @@
+class Solution {
+    public String mostCommonWord(String paragraph, String[] banned) {
+        //banned 长度从 1到100 不算特别长， 因此可以考虑存入HashSet
+        
+        Set<String> ban = new HashSet<>(Arrays.asList(banned));
+        Map<String, Integer> count = new HashMap<>();
+        String[] words = paragraph.replaceAll("\\pP" , " ").toLowerCase().split("\\s+");
+        
+        for(String word: words){
+            if(!ban.contains(word)){
+                count.put(word, count.getOrDefault(word, 0) + 1);
+            }
+        }
+        //return  Collections.max(count.entrySet(), Map.Entry.comparingByValue()).getKey();
+        int max = 0;
+        String res = "";
+        for(String key: count.keySet()){
+            max = Math.max(max, count.get(key));
+        }
+        
+        for(String key: count.keySet()){
+            res = count.get(key) == max? key: res;
+        }
+        return res;
+    }
+}
