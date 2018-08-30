@@ -1,0 +1,35 @@
+class Solution {
+    public int myAtoi(String str) {
+        //判断初始值是否为空或空字符串
+        if(str == null || str.length() == 0)
+            return 0;
+        //除去前置whitespace 
+        str = str.trim();
+        //除去后在判断是否为空
+        if(str.length() == 0) return 0;
+        char[] chs = str.toCharArray();
+        int index = 0;
+        int sign = 1;
+        //除去空格后第一个如果是字母直接返回
+        if(Character.isLetter(chs[index])) return 0;
+        //如果不是数字，也不是字母查看是否是sign
+        if(chs[index] == '+')
+            index++;
+        else if(chs[index] == '-'){
+            sign = -1;
+            index++;
+        }    
+        
+        //开始计算result
+        long res = 0;
+        
+        while(index < chs.length && Character.isDigit(chs[index])){
+            res = res * 10 + Character.getNumericValue(chs[index++]);
+            if(sign * res >= Integer.MAX_VALUE || sign * res <= Integer.MIN_VALUE){
+                return sign == 1? Integer.MAX_VALUE: Integer.MIN_VALUE;
+            }
+        }
+        
+        return res==0? 0: (int)res*sign;
+    }
+}
