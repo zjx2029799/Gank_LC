@@ -1,0 +1,62 @@
+class Solution {
+    public String getPermutation(int n, int k) {
+        //想想我们如何快速找到第几个permutation，按顺序列出来看，比如（1，2，3，4），1对应6个组合，2，3，4都是6个组合，那么第14个肯定在第三组
+        //第一个数字就是3，然后接着看除去12个组合·后在3这个组合里找 14-12=2第二个，3-》（1，2，4）所以第二个数字是1，然后剩下（2，4），（4，2）
+        //第二个自然是（4，2）所以总的permutation是 3，1，4，2     O(n)
+        int[] factor = new int[n+1];
+        factor[0] = 1;
+        for(int i=1; i<n; i++){
+            factor[i] = i * factor[i-1];   
+        }
+        
+        List<Integer> list = new ArrayList<>();
+        for(int i=1; i<=n; i++){
+            list.add(i);
+        }
+        //index from 0
+        k--;
+        StringBuilder sb = new StringBuilder();
+        for(int i=n-1; i>=0; i--){
+            int index = k / factor[i];
+            sb.append(list.get(index));
+            list.remove(list.get(index));
+            k = k - index * factor[i];
+        }
+        return sb.toString();
+    }
+    
+    /*
+    public String getPermutation(int n, int k) {
+        //找到n个数对应的permutation， 然后排序输出第k个， manually using permutation
+        int[] nums = new int[n];
+        for(int i=0; i<n; i++){
+            nums[i] = i + 1;
+        }
+        System.out.println(nums.length);
+        List<List<Integer>> res = new ArrayList<>();
+        permute(nums, res, new ArrayList<>(), k);
+        System.out.println(res.size());
+        if(res.size() < k) return "";
+        StringBuilder sb = new StringBuilder();
+        for(int i: res.get(k-1))
+            sb.append(i);
+        return sb.toString();
+    }
+    
+    private void permute(int[] nums, List<List<Integer>> res, List<Integer> list, int k){
+        if(list.size() == nums.length){
+            res.add(new ArrayList<>(list));
+        }else{
+            for(int i=0; i<nums.length; i++){
+                if(list.contains(nums[i]))
+                    continue;
+                list.add(nums[i]);
+                permute(nums, res, list, k);
+                list.remove(list.size()-1);
+        }
+        }
+        if(res.size() == k)
+            return;
+    }
+    */
+}
