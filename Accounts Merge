@@ -1,0 +1,46 @@
+class Solution {
+    public List<List<String>> accountsMerge(List<List<String>> accounts) {
+        //dfs 将所有email通过图相连，只要有公共节点，就可以一直dfs下去，知道把访问过的email全部合并
+        //合并好后加上他对应的名字即可
+        if(accounts == null || accounts.isEmpty())
+            return null;
+        Map<String, Set<String>> graph = new HashMap<>();
+        Map<String, String> emailToName = new HashMap<>();
+        
+        for(List<String> account: accounts){
+            String name = account.get(0);
+            for(int i=1; i<account.size(); i++){
+                if(!graph.containsKey(account.get(i)))
+                    graph.put(account.get(i), new HashSet<>());
+                emailToName.put(account.get(i), name);
+                if(i == 1)
+                    continue;
+                graph.get(account.get(1)).add(account.get(i));
+                graph.get(account.get(i)).add(account.get(1));
+            }
+        }
+        
+        //开始dfs扫描合并email集合，并且在合并后排序，最后加上名字
+        List<List<String>> res = new ArrayList<>();
+        Set<String> seen = new HashSet<>();
+        for(String email: emailToName.keySet()){
+            List<String> list = new LinkedList<>();
+            if(seen.add(email)){
+                dfs(list, seen, email, graph);
+                Collections.sort(list);
+                list.add(0, emailToName.get(email));
+                res.add(list);
+            }
+        }
+        return res;
+    }
+    
+    private void dfs(List<String> list, Set<String> seen, String email, Map<String, Set<String>> graph){
+        list.add(email);
+        Set<String> nodes = graph.get(email);
+        for(String v: nodes){
+            if(seen.add(v))
+                dfs(list, seen, v, graph);
+        }
+    }
+}
