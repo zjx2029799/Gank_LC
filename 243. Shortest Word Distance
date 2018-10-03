@@ -1,0 +1,28 @@
+class Solution {
+    
+    //最简单的方法就是生成两个list，作为a和b的index集合，然后从两个list里找最小的差值，最坏是O(n^2)
+    //或者找最小差值，用binary search，（O(m*logn)）让 m < n,最快
+    //或者Two Pointer 让每次小的那个移动，因为我们找的是sorted array
+    public int shortestDistance(String[] words, String word1, String word2) {
+        if(words == null || words.length == 0) return -1;
+        //对于每个a 找它和最近一次出现的b的距离
+        //对于每个b 找它和最近一次出现的a的距离
+        //最后合起来返回最小的
+        int index1 = -1;
+        int index2 = -1;// 此时还没找到
+        int res = Integer.MAX_VALUE;
+        for(int i=0; i<words.length; i++){
+            if(word1.equals(words[i])){
+                index1 = i;
+                if(index2 != -1)
+                    res = Math.min(res, Math.abs(index1 - index2));
+            }
+            if(word2.equals(words[i])){
+                index2 = i;
+                if(index1 != -1)
+                    res = Math.min(res, Math.abs(index1 - index2));
+            }
+        }
+        return res;
+    }
+}
