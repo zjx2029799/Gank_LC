@@ -1,0 +1,50 @@
+class WordDistance {
+    
+    Map<String, List<Integer>> map;
+    Map<String, Integer> pair;
+
+    public WordDistance(String[] words) {
+        pair = new HashMap<>();
+        map = new HashMap<>();
+        for(int i=0; i<words.length; i++){
+            //map 保存数组，不用每次都重新生成
+            if(!map.containsKey(words[i]))
+                map.put(words[i], new ArrayList<>());
+            map.get(words[i]).add(i);
+        }
+    }
+    
+    public int shortest(String word1, String word2) {
+        if(pair.containsKey(word1 + "-" + word2))
+            return pair.get(word1 + "-" + word2);
+        if(pair.containsKey(word2 + "-" + word1))
+            return pair.get(word2 + "-" + word1);
+        int res = Integer.MAX_VALUE;
+        List<Integer> list1 = map.get(word1);
+        List<Integer> list2 = map.get(word2);
+        
+
+        for(int i=0, j=0; i<list1.size() && j<list2.size();){
+            int a = list1.get(i);
+            int b = list2.get(j);
+            if(a < b){
+                res = Math.min(res, b-a);
+                i++;
+            }else{
+                res = Math.min(res, a - b);
+                j++;
+            }         
+        }
+        //cache 之前得到的最小距离 因为要多次调用
+        pair.put(word1 + "-" + word2, res);
+        pair.put(word2 + "-" + word1, res);
+        
+        return res;
+    }
+}
+
+/**
+ * Your WordDistance object will be instantiated and called as such:
+ * WordDistance obj = new WordDistance(words);
+ * int param_1 = obj.shortest(word1,word2);
+ */
