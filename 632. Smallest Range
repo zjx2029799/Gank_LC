@@ -1,0 +1,84 @@
+class Solution {
+    public int[] smallestRange(List<List<Integer>> nums) {
+        //priorityQueue O(n * m * logm)
+        int res[] = new int[2];
+        if(nums == null || nums.size() == 0)
+            return res;
+        boolean flag = true;
+        int[] next = new int[nums.size()];
+        int max = Integer.MIN_VALUE;
+        int min = 0;
+        
+        int miny = Integer.MAX_VALUE;
+        
+        //priorityQueue, to store the min_queue
+        PriorityQueue<Integer> min_q = new PriorityQueue<Integer>((i, j) -> nums.get(i).get(next[i]) - nums.get(j).get(next[j]));
+        
+        //initial max and min through the list of list
+        for(int i=0; i<nums.size(); i++){
+            min_q.offer(i);
+            max = Math.max(max, nums.get(i).get(0));
+        }
+        
+        //beigin to calculate
+        for(int i=0; i<nums.size() && flag; i++){
+            for(int j=0; j<nums.get(i).size() && flag; j++){
+                int min_i = min_q.poll();
+                if(miny - min > max - nums.get(min_i).get(next[min_i])){
+                    miny = max;
+                    min = nums.get(min_i).get(next[min_i]);
+                }
+                next[min_i]++;
+                
+                if(next[min_i] == nums.get(min_i).size()){
+                    flag = false;
+                    break;
+                }
+                
+                min_q.offer(min_i);
+                //new max value might from the current max and the new min_i value in list
+                max = Math.max(max, nums.get(min_i).get(next[min_i]));
+            }
+        }
+        res[0] = min;
+        res[1] = miny;
+        return res;
+    }
+    /*
+    public int[] smallestRange(List<List<Integer>> nums) {
+        //最优解，K pointers，复杂度：O(n * m * m) m是每个list的平均长度, 想法由之前的 word distance延伸出来
+        //还是会超时，因此找最大最小值还要用一个priorityQueue O(n * m * logm)
+        int[] res = new int[2];
+        if(nums == null || nums.size() == 0) return res;
+        int min = 0;
+        int max = Integer.MAX_VALUE;
+        int[] next = new int[nums.size()];
+        boolean flag = true;
+        for(int i=0; i<nums.size() && flag; i++){
+            for(int j=0; j<nums.get(i).size() && flag; j++){
+                //第i行的比较开始
+                int min_i = 0; 
+                int max_i = 0;
+                for(int k=0; k<nums.size(); k++){
+                    if(nums.get(min_i).get(next[min_i]) > nums.get(k).get(next[k]))
+                        min_i = k;
+                    if(nums.get(max_i).get(next[max_i]) < nums.get(k).get(next[k]))
+                        max_i = k;
+                }
+                if(max - min > nums.get(max_i).get(next[max_i]) - nums.get(min_i).get(next[min_i])){
+                    max = nums.get(max_i).get(next[max_i]);
+                    min = nums.get(min_i).get(next[min_i]);
+                }
+                
+                next[min_i]++;
+                
+                if(next[min_i] == nums.get(min_i).size())
+                    flag = false;
+            }
+        }
+        res[0] = min;
+        res[1] = max;
+        return res;
+    }
+    */
+}
