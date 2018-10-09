@@ -46,7 +46,7 @@ class Solution {
     }
     /*
     public int[] smallestRange(List<List<Integer>> nums) {
-        //最优解，K pointers，复杂度：O(n * m * m) n是每个list的平均长度, m是list的个数，想法由之前的 word distance延伸出来
+        //最优解，K pointers，复杂度：O(n * m * m) m是每个list的平均长度, 想法由之前的 word distance延伸出来
         //还是会超时，因此找最大最小值还要用一个priorityQueue O(n * m * logm)
         int[] res = new int[2];
         if(nums == null || nums.size() == 0) return res;
@@ -54,6 +54,7 @@ class Solution {
         int max = Integer.MAX_VALUE;
         int[] next = new int[nums.size()];
         boolean flag = true;
+        //最多就是把所有数字都扫一遍，所以是两个嵌套循环，再加上里面的循环判断和终止条件
         for(int i=0; i<nums.size() && flag; i++){
             for(int j=0; j<nums.get(i).size() && flag; j++){
                 //第i行的比较开始
