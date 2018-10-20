@@ -1,0 +1,23 @@
+class Solution {
+    public int compress(char[] chars) {
+        //根据题意可以知道需要三个指针，一个循环遍历 i， 一个用于记录当前modify的位置，
+        //还有一个记录现在新的和前面不一样的字符位置
+        if(chars == null || chars.length == 0)
+            return 0;
+        int modify = 0;
+        int write = 0;
+        for(int i=0; i<chars.length; i++){
+            if(i+1 == chars.length || chars[i+1] != chars[i]){
+                chars[write++] = chars[modify];
+                //chars[write++] = chars[i]; 两个都可以
+                //calculate length
+                if(i > modify){
+                    for(char c: ("" + (i - modify + 1)).toCharArray())
+                        chars[write++] = c;
+                }
+                modify = i + 1;
+            }
+        }
+        return write;
+    }
+}
