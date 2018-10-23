@@ -1,0 +1,25 @@
+class Solution {
+    public double knightProbability(int N, int K, int r, int c) {
+        int[][] dt = new int[][] {{-2, -1}, {-1,-2}, {1,-2}, {2,-1}, {2,1}, {1,2}, {-1,2}, {-2,1}};
+        double[][] dp = new double[N][N];
+        for(double[] d: dp){
+            Arrays.fill(d, 1);
+        }
+        for(int k=0; k<K; k++){
+            double[][] dp2 = new double[N][N];
+            for(int i=0; i<N; i++){
+                for(int j=0; j<N; j++){
+                    for(int[] d: dt){
+                        int x = i + d[0];
+                        int y = j + d[1];
+                        if(x >= N || x < 0 || y >= N || y < 0)
+                            continue;
+                        dp2[i][j] += dp[x][y];
+                    }
+                }
+            }
+            dp = dp2;
+        }
+        return dp[r][c] / Math.pow(8, K);
+    }
+}
