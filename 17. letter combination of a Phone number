@@ -36,4 +36,32 @@ class Solution {
             sb.deleteCharAt(sb.length()-1);
         }
     }
+    
+    
+    public List<String> letterCombinations(String digits) {
+        //再说bfs，因为基本上能用dfs的一定可以bfs
+        //bfs需要每次把整个一层生成因此我们需要一个queue
+         LinkedList<String> res = new LinkedList<>();
+        //coner case
+        if(digits == null || digits.length() == 0)
+            return res;
+        res.add("");
+        
+        //scan all digits
+        for(int i=0; i<digits.length(); i++){
+            int cur = Character.getNumericValue(digits.charAt(i));
+            //use index i as the factor to determine whether we are at each exact level
+            while(i == res.peek().length()){
+                String tmp = res.remove();
+                //retrieve each cur string in the list and add the current value
+                for(char c: phone[cur-1].toCharArray()){
+                    res.add(tmp + c);
+                }
+                //when all member are replaced by the current length of combination
+                //i != res.peak().length(), go on to the next level
+            }
+        }
+        return res;
+    
+    }
 }
