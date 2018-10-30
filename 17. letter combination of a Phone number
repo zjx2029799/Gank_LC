@@ -1,0 +1,39 @@
+class Solution {
+    
+    /*先考虑dfs，因为这个题特别规则
+    1. how the number combine? based on the string of each button of a phone, so we need first create a map between number and its String button number: String[number-1]
+    2. next we need to know the method of combination画 recursive tree 进行规则的dfs
+    */
+    
+    String[] phone = {"", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+    public List<String> letterCombinations(String digits) {
+        List<String> res = new ArrayList<>();
+        //coner case
+        if(digits == null || digits.length() == 0)
+            return res;
+        //recursive function
+        StringBuilder sb = new StringBuilder();
+        dfs(digits, res, 0, sb);
+        return res;
+    }
+    
+    private void dfs(String digits, List<String> res, int index, StringBuilder sb){
+        //base case:
+        if(index == digits.length()){
+            res.add(sb.toString());
+            return;
+        }
+        
+        //first get current char
+        int num = Character.getNumericValue(digits.charAt(index));
+        // iterate all the value of current char
+        for(char c: phone[num-1].toCharArray()){
+            sb.append(c);
+            //go on the next level to find the combination
+            dfs(digits, res, index+1, sb);
+            //after added at the end and we are return at here
+            //we got a sub result and then recover cur level for next char in this level
+            sb.deleteCharAt(sb.length()-1);
+        }
+    }
+}
