@@ -1,0 +1,43 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    
+    /*
+    1.how to judge a substree is uni value? root.val == left.val && root.val == right.val
+    and for coner case: if root == null -> uni valued, if root is leaf node -> uni valued, 
+    
+    2. we can judge it from bottom to top, so we need a global count number
+
+    3. what if root is not leaf node and left is null or right is null, in this case, we cannot 
+    judge directly by left.val or right.val, we just consider left or right which is null as uni value
+    */
+    public int countUnivalSubtrees(TreeNode root) {
+        if(root == null)
+            return 0;
+        int[] res = new int[1];
+        helper(root, res);
+        return res[0];
+    }
+    
+    private boolean helper(TreeNode root, int[] res){
+        if(root == null){
+            return true;
+        }
+        
+        boolean left = helper(root.left, res);
+        boolean right = helper(root.right, res);
+        
+        if((left && right) && (root.left == null || root.left.val == root.val) && (root.right == null || root.right.val == root.val) ){
+            res[0]++;
+            return true;
+        }
+        return false;
+    }
+}
