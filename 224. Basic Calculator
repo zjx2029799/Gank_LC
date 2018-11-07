@@ -1,0 +1,134 @@
+class Solution {
+    
+    /*
+    1. how to calculate, first we just from now parathesis()
+    " 1 - 23 - 45" = -67
+      we need a iteration each time print out a character either number or operator, so let's create a data structure
+    */
+    
+    /*
+    1. supose we do not have parathesis, so we scan the string, when char is number directly calcuate it with operator
+       when it is operator, just update the operator
+    
+    
+     public int calculateSimple(String s) {
+        if(s == null || s.length() == 0) return 0;
+         char[] chs = s.toCharArray();
+         int res = 0; // no overflow, so directly use int
+         char curOperator = '+';
+         for(char c: chs){
+             if(c == ' ')
+                 continue;
+             if(Character.isDigit(c)){
+                 int cur = Character.getNumericValue(c);
+                 res = curOperator == '+'? res + cur: res - cur;
+             }else{
+                 curOperator = c;
+             }
+         }
+         return res;
+    }
+    
+    
+    */
+    /*
+    1. if we have parathesis, the operation order need to be changed
+    2. we need to know the priority of the operator, when meet a '(' priority++, when ')' priority--;
+        the structure of that can be map<Character, Integer>
+    3. we need a stack to store them, beacause we sometimes want first in first out, when next operator's priority 
+        more than peek, stack in, else stack out
+    4. when meet number, just stack in, when stack out an operator, stack out two number at the same time
+    */
+    
+     public int calculate(String s) {
+        //if(s == null || s.length() == 0) return 0;
+         char[] chs = s.toCharArray();
+         int priority = 0;
+         Deque<OperatorPriority> operator = new LinkedList<>();
+         Deque<Integer> operant = new LinkedList<>();
+         
+         for(int i=0; i<chs.length; i++){
+             
+             if(chs[i] == ' '){
+                 continue;
+             }
+               
+             else if(Character.isDigit(chs[i])){
+                 int now = 0;
+                 while(i<chs.length && Character.isDigit(chs[i])){
+                     now = now*10 + Character.getNumericValue(chs[i]);
+                     i++;
+                 }
+                 //注意要把 i 还原！！！！
+                 i--;
+                 //System.out.println(now);
+                 operant.push(now);
+             }  
+             
+             else if(chs[i] == '('){
+                 priority++;
+             }
+                 
+             
+             else if(chs[i] == ')'){
+                 priority--;
+             }
+             
+             else {
+                 while(!operator.isEmpty() && operator.peek().prior >= priority){                        
+                     int right = operant.pop();                        
+                     int left = operant.pop();                        
+                     int cur = operator.pop().operator == '+'? left + right: left - right;                        
+                     operant.push(cur);                    
+                 }     
+                 OperatorPriority tmp = new OperatorPriority(chs[i], priority);    
+                 operator.push(tmp); 
+                 
+                 //System.out.println(tmp.operator);
+             }
+             
+         }
+         
+         while(!operator.isEmpty()){
+             int right = operant.pop();
+             int left = operant.pop();
+             
+             int cur = operator.pop().operator == '+'? left + right: left - right;
+             operant.push(cur); 
+             
+         }
+         return operant.pop();
+    }
+}
+
+public class OperatorPriority{
+    Character operator;
+    Integer prior;
+    
+    public OperatorPriority(char opt, int pri){
+        this.operator = opt;
+        this.prior = pri;
+    }
+}
+    
+    
+/*
+
+test case： (1+(4+5+2)-3)+(6+8)
+
+stack1:     1     1     1      1,4      1,4             1,4,5           1,4,5                   1,4,5,2               1,4,5,2               1,11
+stack2:         (+,1) (+,1)    (+,1)   (+,1),(+, 2)   (+,1),(+, 2)   (+,1),(+, 2),(+,2)      (+,1),(+, 2),(+,2)     (+,1),(+, 2),(+,2)     (+,1),(-, 1)
+priori: 1   1     1    2        2       2               2                2                          2                   1                       1
+ch:     (   1     +    (        4       +               5                +                          2                   )                       -              
+         
+         
+
+         
+stack1:    1,11,3        1,11,3             9       9           9,6       9,6            9,6,8          9,14
+stack2:  (+,1),(-, 1)   (+,1),(-, 1)      (+, 0)   (+, 0)    (+, 0)     (+, 0),(+,1)   (+, 0),(+,1)  (+, 0),(+,1)
+proiri:    1                0               0       1           1           1               1           0
+ch:        3                )               +       (           6           +               8           )
+  
+6 + 8 = 14
+
+*/
