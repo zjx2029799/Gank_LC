@@ -1,0 +1,159 @@
+class Solution {
+    //总结四种方法，当k << n, 后三种都是 O（n），第一种是nlogn； k和n差不多的时候四种都是 nlogn
+    public List<String> topKFrequent(String[] words, int k) {
+        // 想加速算法，就会想到能不能分治，partition，quick sort里的partition方法，
+        //每次返回一个pivot的最终位置，那么如果这个位置正好是k则直接把前半部分拿出来排序即可
+         List<String> res = new ArrayList<>();
+        if(words == null || words.length == 0)
+            return res;
+        Map<String, Integer> map = new HashMap<>();
+        for(String word: words){
+            int freq = map.getOrDefault(word, 0);
+            map.put(word, freq+1);
+        }
+        
+        Comparator descend = Comparator
+            .comparing(Map.Entry<String, Integer>::getValue).reversed()
+            .thenComparing(Map.Entry<String, Integer>::getKey);
+       
+        List<Map.Entry<String, Integer>> list = new ArrayList<>(map.entrySet());
+        
+         int low = 0;
+        int hight = list.size();
+        
+        
+        while(low < high){
+            int partitionIndex = partition(low, high, list);
+            
+            if(partitionIndex == k-1)
+                break;
+            else if(partitionIndex < k-1){
+                high = partitionIndex-1;
+            }else{
+                low = partitionIndex + 1;
+            }
+        }
+        
+        //sort first k numbers 
+        Collections.sort(list.subList(0, k), descend);
+        
+        for(int i=0; i<k; i++){
+            res.add(list.get(i).getKey());
+        }
+        return res;
+        //没有实现 partition，只是提供一个思路：
+        //time：map: n, partition average: n + n/2 + n / 4 + .... = n. 
+        //worse: n + n-1 + n-2... =n^2;  sort: klogk ==>最后 time: n + klogk  space：O（n）
+    }
+    
+    /*
+    public List<String> topKFrequent(String[] words, int k) {
+        //min heap also works: maintain a min heap size of k, 每次弹出最小的换上比他大的
+        //at last the heap only contains k words which k is the k top freq
+        List<String> res = new ArrayList<>();
+        if(words == null || words.length == 0)
+            return res;
+        Map<String, Integer> map = new HashMap<>();
+        for(String word: words){
+            int freq = map.getOrDefault(word, 0);
+            map.put(word, freq+1);
+        }
+        
+        Comparator<Map.Entry<String, Integer>> descend = Comparator
+            .comparing(Map.Entry<String, Integer>::getValue).reversed()
+            .thenComparing(Map.Entry<String, Integer>::getKey);
+        //min heap
+        PriorityQueue<Map.Entry<String, Integer>> minHeap = new PriorityQueue<>(k ,descend.reversed());
+        
+        //need an iterator
+        Iterator<Map.Entry<String, Integer>> iter = map.entrySet().iterator();
+        
+        for(int i=0; i<k; i++){
+            minHeap.add(iter.next());
+        }
+        
+        for(int i=k; i<map.size(); i++){
+            Map.Entry<String, Integer> cur = iter.next();
+            if(descend.compare(cur, minHeap.peek()) < 0){
+                minHeap.remove();
+                minHeap.add(cur);
+            }
+        }
+        
+        while(!minHeap.isEmpty()){
+            res.add(minHeap.remove().getKey());
+        }
+        
+       Collections.reverse(res);
+        return res;
+        //time: map: O(n), space:O(n), minheap insert: nlogK, add to list: k, reverse: k
+        //time: n + nlogk + k + k = nlogk; space: O(n)
+    }
+    */
+    
+    /*
+    public List<String> topKFrequent(String[] words, int k) {
+        // 使用 max heap，priority Queue, 
+        List<String> res = new ArrayList<>();
+        if(words == null || words.length == 0)
+            return res;
+        Map<String, Integer> map = new HashMap<>();
+        for(String word: words){
+            int freq = map.getOrDefault(word, 0);
+            map.put(word, freq+1);
+        }
+        
+        Comparator<Map.Entry<String, Integer>> descend = Comparator
+            .comparing(Map.Entry<String, Integer>::getValue).reversed()
+            .thenComparing(Map.Entry<String, Integer>::getKey);
+        
+        PriorityQueue<Map.Entry<String, Integer>> maxHeap = new PriorityQueue<>(map.size(), descend);
+        
+        for(Map.Entry<String, Integer> entry: map.entrySet()){
+            maxHeap.add(entry);
+        }
+            
+        for(int i=0; i<k; i++){
+            res.add(maxHeap.remove().getKey());
+        }
+        
+        return res;
+        // map: time n, space: n;   maxheap(insert): time: nlogn; maxheap pop: klogn;  res: k--> time: O(nlogn) space: O(n)
+    }
+    */
+        
+      /*  
+    public List<String> topKFrequent(String[] words, int k) {
+        //basic method
+        //map 记录一个freq，然后按照map entry中的value排序（reversed），排好序后输出前k个，
+       // 排序过程可以使用collections直接排序，里面既要用value排序，而且还要用字母序列小的在前
+        List<String> res = new ArrayList<>();
+        if(words == null || words.length == 0)
+            return res;
+        
+        Map<String, Integer> map = new HashMap<>();
+        for(String word: words){
+            int freq = map.getOrDefault(word, 0);
+            map.put(word, freq+1);
+        }
+        
+        //sort them, first get the customized comparator
+        Comparator<Map.Entry<String, Integer>> freqAndAlp = Comparator
+            .comparing(Map.Entry<String, Integer>::getValue).reversed()
+            .thenComparing(Map.Entry<String, Integer>::getKey);
+        
+        List<Map.Entry<String, Integer>> list = new ArrayList<>(map.entrySet());
+        
+        Collections.sort(list, freqAndAlp);
+        
+        //list done;
+        for(int i=0; i<k; i++){
+            res.add(list.get(i).getKey());
+        }
+        
+        return res;
+        
+    }
+    //time complexiy: n + nlogn + k = O(nlogn), extra space: O(n) 
+    */
+}
