@@ -1,0 +1,49 @@
+import java.util.*;
+public class RalllyHealth {
+
+	
+	
+	
+	public static void main(String[] args) {
+		String[] operator = {"+", "-", "*", " "};
+		List<List<String>> res = generateExpression("123", operator);
+		for(int i=0; i<res.size(); i++){
+			for(int j=0; j<res.get(i).size(); j++){
+				System.out.print(res.get(i).get(j) + "  " );
+			}
+			System.out.println();
+		}
+	}
+	
+	
+	private static List<List<String>> generateExpression(String seq, String[] operator) {
+		List<List<String>> res = new ArrayList<>();
+		if(seq == null || seq.length() == 0){
+			return res;
+		}
+		
+		List<String> list = new ArrayList<>();
+		backtrackExpression(res, list, 0, seq, operator);
+		
+		return res;
+	}
+	
+	private static void backtrackExpression(List<List<String>> res, List<String> list, int index, String seq, String[] operator){
+		if(index == seq.length()){
+			res.add(new ArrayList<>(list));
+			return;
+		}
+		
+		for(int i=0; i<4; i++){
+			if(!operator[i].equals(" ")){
+				list.add("" + seq.charAt(index));
+			}else{
+				String cur = list.remove(list.size() - 1) + seq.charAt(index);
+				list.add(cur);
+			}
+			
+			backtrackExpression(res, list, index + 1, seq, operator);
+			list.remove(list.size() - 1);
+		}
+	}
+}
