@@ -1,54 +1,150 @@
 import java.util.*;
-public class RalllyHealth {
+public class TestNew {
 
 	
-	
-	
 	public static void main(String[] args) {
-		String[] operator = {"+", "-", "*", " "};
-		List<List<String>> res = generateExpression("123", operator);
-		System.out.println(res.size());
-		for(int i=0; i<res.size(); i++){
-			for(int j=0; j<res.get(i).size(); j++){
-				System.out.print(res.get(i).get(j) + "  " );
+		//input
+		String[] operator = {"+", "-", "*"};
+		int N = 2000;
+		String[] input = {"2100100", "77", "20051000"};
+		
+		// begin my solution for this question
+		//my solution: 
+		/*
+		 1. get all of the possible expressions for the given number sequence, which has 4^(n-1), if the given sequence number's length is n
+		 2. get valid expressions from the previous steps.
+		 3. calculate each valid expression, if it is equals to N, print out this correct result.
+		 4. If no result, print "impossible".
+		 */
+		for(String str: input){
+			boolean hasRes = false;
+			List<String> res = validInputExpression(generateExpression(str, operator));
+			for(int i=0; i<res.size(); i++){
+				if(calculate(res.get(i)) == N){
+					if(!hasRes)
+						hasRes = true;
+					System.out.println(res.get(i));
+				}
 			}
-			System.out.println();
-		}
+			if(!hasRes)
+				System.out.println("Impossible");
+		}			
+		
 	}
 	
+	//get all valid expressions by given sequence number
+	private static List<String> validInputExpression(List<String> res){
+		
+		List<String> validRes = new ArrayList<>();
+		//get valid result of list
+		for(int i=0; i<res.size(); i++){
+			String cur = res.get(i);
+			cur = cur.replace('+', ' ');
+			cur = cur.replace('-', ' ');
+			cur = cur.replace('*', ' ');
+			String[] tmp = cur.split(" ");
+			boolean flag = true;
+			for(String str: tmp){
+				if(!isValid(0, str)){
+					flag = false;
+				}
+			}
+			if(flag)
+				validRes.add(res.get(i));
+		}
+		return validRes;
+	}
 	
-	private static List<List<String>> generateExpression(String seq, String[] operator) {
+	//get all possible expressions by given sequence number
+	private static List<String> generateExpression(String seq, String[] operator) {
 		List<List<String>> res = new ArrayList<>();
 		if(seq == null || seq.length() == 0){
-			return res;
+			return null;
 		}
 		
 		List<String> list = new ArrayList<>();
+		//list.add("" + seq.charAt(0));
 		backtrackExpression(res, list, 0, seq, operator);
 		
-		return res;
+		List<String> result = new ArrayList<>();
+		
+		for(List cur: res){
+			StringBuilder sb = new StringBuilder();
+			for(int i=0; i<cur.size(); i++){
+				sb.append(cur.get(i));
+			}
+			result.add(sb.toString());
+		}
+		
+		return result;
 	}
 	
+	//backtracking to get all possible expressions 
 	private static void backtrackExpression(List<List<String>> res, List<String> list, int index, String seq, String[] operator){
 		if(index == seq.length()){
 			res.add(new ArrayList<>(list));
 			return;
 		}
 		
-		for(int i=0; i<4; i++){
-			if(!operator[i].equals(" ")){
-				list.add("" + seq.charAt(index));
-			}else{
-				String cur = list.remove(list.size() - 1) + seq.charAt(index);
-				list.add(cur);
+		if(!list.isEmpty() && Character.isDigit(list.get(list.size() - 1).charAt(0))){
+			for(int i=0; i<operator.length; i++){
+				list.add("" + operator[i]);
+				backtrackExpression(res, list, index, seq, operator);
+				list.remove(list.size() - 1);
 			}
-			if(index != seq.length() - 1)
-				list.add(operator[i]);
-			else
-				list.add("");
-			backtrackExpression(res, list, index + 1, seq, operator);
-			//System.out.println(list.get(list.size() - 1));
-			list.remove(list.size() - 1);
 		}
+		
+		list.add("" + seq.charAt(index));
+		backtrackExpression(res, list, index + 1, seq, operator);
+		list.remove(list.size() - 1);
+	}
+	
+	
+	//calculate every valid expression
+	private static long calculate(String s) {
+		char[] chs = s.toCharArray();
+        Deque<Long> stack = new ArrayDeque<>();
+        long first = getNext(0, s);
+        stack.addFirst(first);
+        int index = ("" + first).length();
+        while(index < chs.length){
+            long next = getNext(index+1, s);
+            if(chs[index] == '+') stack.addFirst(next);
+            if(chs[index] == '-') stack.addFirst(-next);
+            if(chs[index] == '*') stack.addFirst(stack.removeFirst() * next); 
+            index = index + ("" + next).length() + 1;
+        }
+        long res = 0;
+        
+        while(!stack.isEmpty()){
+            res += stack.removeFirst();
+        }
+        
+        return res;
+	}
+	
+	//judge if current expression is valid for calculating
+	private static boolean isValid(int index, String str){
+		long res = 0;
+		int pos = 0;
+		while(index < str.length()){
+			if(pos > 0 && res == 0)
+				return false;
+			res += res * 10 + Character.getNumericValue(str.charAt(index));
+			index ++;
+			pos ++;
+		}
+		return true;
+	}
+	
+	//get next number from current string
+	private static long getNext(int index, String str) {
+		long res = 0;
+		while(index < str.length() && Character.isDigit(str.charAt(index))){
+			res = res * 10 + Character.getNumericValue(str.charAt(index));
+			index ++;
+		}
+		return res;
+		
 	}
 }
