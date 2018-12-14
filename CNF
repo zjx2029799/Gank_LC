@@ -1,0 +1,99 @@
+/**
+ * Created by avaqi on 2018/12/7.
+ */
+import java.util.*;
+
+public class RH {
+	
+	
+	private static List<List<String>> result = new ArrayList<>();
+	
+    public static void main(String[] args) {
+    	
+    	List<String> S = new ArrayList<>();
+    	S.add("EQ");
+    	S.add("TW");
+    	S.add("KR");
+    	S.add("x");
+    	
+    	Map<Character, List<String>> dict = new HashMap<>();
+    	dict.put('E', new ArrayList<>(S));
+    	
+    	//put all rule as the way below.
+    	List<String> l2 = new ArrayList<>();
+    	l2.add("TW");
+    	l2.add("KR");
+    	l2.add("x");
+    	dict.put('T', l2);
+    	
+    	
+        System.out.println(output("xW", dict, S));
+        //System.out.println(output("x", dict, S));
+        //System.out.println(output("xx", dict, S));
+        //System.out.println(output("KRW", dict, S));
+        
+        for(List list: result){
+        	for(int i=0; i<list.size(); i++){
+        		System.out.print(list.get(i) + " ");
+        	}
+        	System.out.println();
+        }
+    }
+
+    private static boolean parse(String seq, Map<Character, List<String>> dict, List<String> S) {
+    	int len = seq.length() * 2 - 1;
+    	
+    	boolean flag = false;
+    	
+    	
+    	
+    	List<String> cur = S;
+		List<String> next = new ArrayList<>();
+		
+		
+		
+		for(String str: cur) {
+			if(seq.equals(str)){
+				flag = true;
+			}
+		}
+		
+		if(flag)
+			return true;
+    	
+    	for(int i=1; i<len; i++){
+    		
+    		if(flag){break;}
+    		
+    		for(String str: cur) {
+    			for(int j=0; j < str.toCharArray().length; j++){
+    				for(char key: dict.keySet()){
+    					if(key == str.charAt(j)){
+    						for(int k=0; k<dict.get(key).size(); k++){
+    							String compair = str.replace("" + key, dict.get(key).get(k));
+    							next.add(compair);
+    							if(seq.equals(compair)){
+    								flag = true;
+    							}
+    						}
+    					}
+    				}
+    			}
+    		}
+    		
+    		cur = next;
+    		result.add(cur);
+    		next = new ArrayList<>();
+    	}
+    	
+    	return flag;
+    }
+    
+    
+    private static String output(String seq, Map<Character, List<String>> dict, List<String> S){
+    	if(parse(seq, dict, S))
+    		return "Accept";
+    	else
+    		return "Reject";
+    }
+}
